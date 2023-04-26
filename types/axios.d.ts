@@ -54,3 +54,10 @@ export interface UploadFileParams {
   filename?: string;
   [key: string]: any;
 }
+
+export interface ErrResult<T = any> {
+  code: number;
+  reason: string;
+  message: string;
+  metadata: T;
+}

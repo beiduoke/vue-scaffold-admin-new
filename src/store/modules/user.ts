@@ -6,8 +6,11 @@ import { RoleEnum } from '/@/enums/roleEnum';
 import { PageEnum } from '/@/enums/pageEnum';
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
-import { GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel';
-import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
+// import { GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel';
+// import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
+// sys replace core custom
+import { GetUserInfoModel, LoginParams } from '/@/api/core/model/userModel';
+import { doLogout, getUserInfo, loginApi } from '/@/api/core/user';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { router } from '/@/router';
