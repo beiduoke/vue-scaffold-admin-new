@@ -17,9 +17,6 @@ export const transform = {
     const { response, config } = error || {};
     const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none';
     const err: string = error?.toString?.() ?? '';
-
-    console.log(response);
-    console.log('执行到这里了 - 00', response?.data);
     const { message, code } = response?.data;
     let errMessage = '';
     try {

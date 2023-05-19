@@ -7,8 +7,8 @@ const commonConfig: UserConfig = {
     host: true,
   },
   esbuild: {
-    drop: ['console', 'debugger'],
-    // drop: ['debugger'],
+    // drop: ['console', 'debugger'],
+    drop: ['debugger'],
   },
   build: {
     reportCompressedSize: false,
