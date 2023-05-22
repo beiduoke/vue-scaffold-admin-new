@@ -286,49 +286,8 @@ export function useDataSource(
 
       const { sortInfo = {}, filterInfo } = searchState;
 
-      // 特殊处理 protobuf api 公共分页查询
-      const sortParams = sortInfo || defSort || opt?.sortInfo;
-
-      const filterParams = filterInfo || opt?.filterInfo;
-
-      const queryParams: Recordable = merge(
-        useSearchForm ? getFieldsValue() : {},
-        opt?.searchInfo ?? {},
-      );
-
-      // YLB EDIT: 增加排序和过滤
-
-      const queryMap: { [key: string]: string } = {};
-      let queryCount = 0;
-      for (const k in queryParams) {
-        const v = (queryParams as any)[k];
-        if (v) {
-          queryMap[k] = v;
-          ++queryCount;
-        }
-      }
-      for (const k in filterParams) {
-        const v = (filterParams as any)[k];
-        if (v) {
-          // 暂时只支持一个过滤条件吧
-          queryMap[k] = v[0];
-          ++queryCount;
-        }
-      }
-      // 特殊处理
-
-      const sortMap: { [key: string]: string } = {};
-      let sortCount = 0;
-      if (sortParams.hasOwnProperty('field') && sortParams.hasOwnProperty('order')) {
-        sortMap[sortParams.field] = sortParams.order;
-        ++sortCount;
-      }
       let params: Recordable = merge(
         pageParams,
-        // 特殊处理 protobuf api 公共分页查询
-        queryCount == 0 ? {} : { query: queryMap },
-        sortCount == 0 ? {} : { orderBy: sortMap },
-        // 特殊处理
         useSearchForm ? getFieldsValue() : {},
         searchInfo,
         opt?.searchInfo ?? {},
@@ -338,7 +297,6 @@ export function useDataSource(
         opt?.sortInfo ?? {},
         opt?.filterInfo ?? {},
       );
-
       if (beforeFetch && isFunction(beforeFetch)) {
         params = (await beforeFetch(params)) || params;
       }

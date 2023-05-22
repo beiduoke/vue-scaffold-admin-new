@@ -51,7 +51,6 @@
   import { columns, searchFormSchema } from './user.data';
   import { useGo } from '/@/hooks/web/usePage';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { merge } from 'lodash-es';
   const { createMessage } = useMessage();
   export default defineComponent({
     name: 'UserManagement',
@@ -123,7 +122,7 @@
       }
 
       function handleSelect(deptId = '') {
-        searchInfo.query = merge(searchInfo.query, { deptId });
+        searchInfo.deptId = deptId;
         reload();
       }
 
