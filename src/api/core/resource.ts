@@ -1,8 +1,11 @@
-import { ResourceParams, ResourcePageParams } from './model/resourceModel';
+import {
+  ResourceListGetResultModel,
+  ResourceParams,
+  ResourcePageParams,
+} from './model/resourceModel';
 import { defHttp } from '/@/utils/http/core';
 
 import { BasicFetchResult, BasicHandleResult } from './model/baseModel';
-import { RoleListGetResultModel } from './model/roleModel';
 
 const Api = {
   /** 资源管理 */
@@ -18,7 +21,10 @@ const Api = {
  * @returns
  */
 export const getResourceListByPage = (params?: ResourcePageParams) =>
-  defHttp.get<RoleListGetResultModel>({ url: Api.Resource, params });
+  defHttp.get<ResourceListGetResultModel>({ url: Api.Resource, params }).then((data) => {
+    data.total = Number(data.total);
+    return data;
+  });
 
 /**
  * 资源列表-分组

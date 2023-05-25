@@ -18,7 +18,10 @@ const Api = {
  * @returns
  */
 export const getDeptListByPage = (params?: DeptParams) =>
-  defHttp.get<DeptListGetResultModel>({ url: Api.Dept, params });
+  defHttp.get<DeptListGetResultModel>({ url: Api.Dept, params }).then((data) => {
+    data.total = Number(data.total);
+    return data;
+  });
 
 /**
  * 获取部门列表-树形

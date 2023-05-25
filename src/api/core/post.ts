@@ -16,7 +16,10 @@ const Api = {
  * @returns
  */
 export const getPostListByPage = (params?: PostParams) =>
-  defHttp.get<PostListGetResultModel>({ url: Api.Post, params });
+  defHttp.get<PostListGetResultModel>({ url: Api.Post, params }).then((data) => {
+    data.total = Number(data.total);
+    return data;
+  });
 
 /**
  * 创建岗位

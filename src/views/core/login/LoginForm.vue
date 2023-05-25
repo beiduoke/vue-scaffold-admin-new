@@ -11,9 +11,10 @@
     <FormItem name="domain" class="enter-x">
       <Input
         size="large"
-        v-model:value="formData.domain"
+        v-model:value="formData.domain.name"
         :placeholder="t('core.login.domainName')"
         class="fix-auto-fill"
+        :disabled="formData.domain.disable || false"
       />
     </FormItem>
     <FormItem name="account" class="enter-x">
@@ -110,7 +111,8 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   //import { onKeyStroke } from '@vueuse/core'; 
   import { useRoute } from 'vue-router';
-  import { getDomainByCode } from '/@/api/core/domain';
+  import { getDomainByCode, getDomainByName } from '/@/api/core/domain';
+import { Exception } from '../../sys/exception';
 
   const ACol = Col;
   const ARow = Row;
@@ -132,7 +134,11 @@
   const formData = reactive({
     account: 'xiong',
     password: '123123',
-    domain: '1557658909480354584'
+    domain: {
+      code: '1557658909480354584',
+      name: '中台管理平台',
+      disable: false
+    }
   });
 
   // 根据domainCode 获取租户信息
@@ -140,9 +146,16 @@
   if (domainCode) {
     try {
       loading.value = true;
-      formData.domain = domainCode;
       getDomainByCode(domainCode).then((res) => {
-        console.log(res.name);
+        formData.domain.code = domainCode
+        formData.domain.name = res.name
+        formData.domain.disable = true
+      }).catch((e) => {
+        createErrorModal({
+        title: t('sys.api.errorTip'),
+        content: '租户获取失败' || t('sys.api.networkExceptionMsg'),
+        getContainer: () => document.body.querySelector(`.${prefixCls}`) || document.body,
+        })
       });
     } finally {
       loading.value = false;
@@ -160,10 +173,16 @@
     if (!data) return;
     try {
       loading.value = true;
+
+      const domain = await getDomainByName(data.domain.name)
+      if (domain.code !== '') {
+        data.domain.code = domain.code
+      }
+
       const userInfo = await userStore.login({
         password: data.password,
         account: data.account,
-        domain: data.domain,
+        domain: data.domain.code,
         mode: 'none', //不要默认的错误提示
       });
       if (userInfo) {

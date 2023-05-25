@@ -92,7 +92,10 @@ export interface ListUser {
 }
 
 export const getUserListByPage = (params: UserParams) =>
-  defHttp.get<UserListGetResultModel>({ url: Api.User, params });
+  defHttp.get<UserListGetResultModel>({ url: Api.User, params }).then((data) => {
+    data.total = Number(data.total);
+    return data;
+  });
 
 export const isUserExist = (account: string) =>
   defHttp.post(

@@ -41,7 +41,10 @@ export const getDomainListTree = (pid: string | number = 0, _params?: DomainPara
  * @returns
  */
 export const getDomainListByPage = (params?: DomainParams) =>
-  defHttp.get<DomainListGetResultModel>({ url: Api.Domain, params });
+  defHttp.get<DomainListGetResultModel>({ url: Api.Domain, params }).then((data) => {
+    data.total = Number(data.total);
+    return data;
+  });
 
 /**
  * 创建租户

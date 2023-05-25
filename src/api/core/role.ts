@@ -20,7 +20,10 @@ const Api = {
  * @returns
  */
 export const getRoleListByPage = (params?: RolePageParams) =>
-  defHttp.get<RoleListGetResultModel>({ url: Api.Role, params });
+  defHttp.get<RoleListGetResultModel>({ url: Api.Role, params }).then((data) => {
+    data.total = Number(data.total);
+    return data;
+  });
 /**
  * 角色全部列表
  * @param params

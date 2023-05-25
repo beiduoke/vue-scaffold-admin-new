@@ -14,6 +14,7 @@ export type DomainParams = {
 export interface DomainListItem {
   id: string;
   name: string;
+  code: string;
   sort: string;
   parentId: string;
   createdAt: string;
