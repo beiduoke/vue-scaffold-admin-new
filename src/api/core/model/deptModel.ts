@@ -17,7 +17,6 @@ export type DeptPageParams = BasicPageParams & DeptParams;
 export interface DeptListItem {
   id: string;
   name: string;
-  roleValue: string;
   state: DeptState;
   sort: string;
   createdAt: string;

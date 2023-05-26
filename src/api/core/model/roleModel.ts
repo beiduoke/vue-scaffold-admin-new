@@ -26,7 +26,6 @@ export type RolePageParams = BasicPageParams & RoleParams;
 export interface RoleListItem {
   id: string;
   name: string;
-  roleValue: string;
   state: RoleState;
   sort: string;
   createdAt: string;

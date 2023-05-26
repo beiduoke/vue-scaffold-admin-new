@@ -112,7 +112,6 @@
   //import { onKeyStroke } from '@vueuse/core'; 
   import { useRoute } from 'vue-router';
   import { getDomainByCode, getDomainByName } from '/@/api/core/domain';
-import { Exception } from '../../sys/exception';
 
   const ACol = Col;
   const ARow = Row;

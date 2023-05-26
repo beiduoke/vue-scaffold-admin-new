@@ -94,7 +94,7 @@
           });
           // 更新分配菜单
           const { items } = await getDomainMenuList(data.record.id);
-          setMenuFieldsValue({ menu: items.map((item) => item.id) });
+          setMenuFieldsValue({ menu: items.map((item: { id: any; }) => item.id) });
         }
 
         const items = await getDomainListTree();

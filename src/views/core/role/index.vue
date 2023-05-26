@@ -15,6 +15,11 @@
               },
               {
                 icon: 'clarity:note-edit-line',
+                label: '菜单权限',
+                onClick: handleMenuAuthority.bind(null, record),
+              },
+              {
+                icon: 'clarity:note-edit-line',
                 label: '数据权限',
                 onClick: handleDataAuthority.bind(null, record),
               },
@@ -33,7 +38,8 @@
       </template>
     </BasicTable>
     <RoleDrawer @register="registerDrawer" @success="handleSuccess" />
-    <RoleDataModal @register="registerModal" @success="handleSuccess" />
+    <RoleMenuModal @register="registerMenuModal" @success="handleSuccess" />
+    <RoleDataModal @register="registerDataModal" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
@@ -45,6 +51,7 @@
 
   import { useDrawer } from '/@/components/Drawer';
   import RoleDrawer from './RoleDrawer.vue';
+  import RoleMenuModal from './RoleMenuModal.vue';
   import RoleDataModal from './RoleDataModal.vue';
 
   import { columns, searchFormSchema } from './role.data';
@@ -52,9 +59,10 @@
   const { createMessage } = useMessage();
   export default defineComponent({
     name: 'RoleManagement',
-    components: { BasicTable, RoleDrawer, RoleDataModal, TableAction },
+    components: { BasicTable, RoleDrawer, RoleDataModal, RoleMenuModal, TableAction },
     setup() {
-      const [registerModal, { openModal }] = useModal();
+      const [registerMenuModal, { openModal: openMenuModal }] = useModal();
+      const [registerDataModal, { openModal: openDataModal }] = useModal();
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload, setLoading }] = useTable({
         title: '角色列表',
@@ -69,7 +77,7 @@
         bordered: true,
         showIndexColumn: false,
         actionColumn: {
-          width: 200,
+          width: 300,
           title: '操作',
           dataIndex: 'action',
           // slots: { customRender: 'action' },
@@ -90,8 +98,12 @@
         });
       }
 
+      function handleMenuAuthority(record: Recordable) {
+        openMenuModal(true, { record });
+      }
+
       function handleDataAuthority(record: Recordable) {
-        openModal(true, { record });
+        openDataModal(true, { record });
       }
 
       async function handleDelete(record: Recordable) {
@@ -116,11 +128,13 @@
       return {
         registerTable,
         registerDrawer,
-        registerModal,
+        registerMenuModal,
+        registerDataModal,
         handleCreate,
         handleEdit,
         handleDelete,
         handleSuccess,
+        handleMenuAuthority,
         handleDataAuthority,
       };
     },

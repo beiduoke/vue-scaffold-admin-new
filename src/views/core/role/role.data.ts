@@ -115,13 +115,6 @@ export const formSchema: FormSchema[] = [
     field: 'remarks',
     component: 'InputTextArea',
   },
-  {
-    label: ' ',
-    field: 'menu',
-    slot: 'menu',
-    defaultValue: [],
-    component: 'Input',
-  },
 ];
 
 export const dataFormSchema: FormSchema[] = [
@@ -131,5 +124,22 @@ export const dataFormSchema: FormSchema[] = [
     required: true,
     component: 'Input',
     componentProps: { disabled: true },
+  },
+];
+
+export const menuFormSchema: FormSchema[] = [
+  {
+    field: 'name',
+    label: '角色名称',
+    required: true,
+    component: 'Input',
+    componentProps: { disabled: true },
+  },
+  {
+    label: ' ',
+    field: 'menu',
+    slot: 'menu',
+    defaultValue: [],
+    component: 'Input',
   },
 ];

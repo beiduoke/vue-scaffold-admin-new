@@ -15,7 +15,6 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchema } from './post.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import { TreeItem } from '/@/components/Tree';
 
   import { createPost, updatePost } from '/@/api/core/post';
   import { PostListItem } from '/@/api/core/model/postModel';
@@ -29,7 +28,6 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
-      const treeData = ref<TreeItem[]>([]);
       const record = ref<PostListItem>();
 
       const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
@@ -83,7 +81,6 @@
         registerForm,
         getTitle,
         handleSubmit,
-        treeData,
       };
     },
   });

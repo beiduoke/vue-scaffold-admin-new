@@ -122,7 +122,11 @@
       }
 
       function handleSelect(deptId = '') {
-        searchInfo.deptId = deptId;
+        if (deptId !== '') {
+          searchInfo.deptId = deptId;
+        } else {
+          delete searchInfo.deptId
+        }
         reload();
       }
 
