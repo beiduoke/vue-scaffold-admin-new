@@ -5,7 +5,7 @@ import { Switch } from 'ant-design-vue';
 import { setRoleState } from '/@/api/core/role';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { formatToDateTime } from '/@/utils/dateUtil';
-import { RoleState } from '/@/api/core/model/roleModel';
+import { RoleScope, RoleState } from '/@/api/core/model/roleModel';
 
 export const columns: BasicColumn[] = [
   {
@@ -117,6 +117,8 @@ export const formSchema: FormSchema[] = [
   },
 ];
 
+const isDeptCustom = (type: string | keyof RoleScope) => type === RoleScope.DEPT_CUSTOM;
+
 export const dataFormSchema: FormSchema[] = [
   {
     field: 'name',
@@ -124,6 +126,29 @@ export const dataFormSchema: FormSchema[] = [
     required: true,
     component: 'Input',
     componentProps: { disabled: true },
+  },
+  {
+    field: 'scope',
+    label: '数据范围',
+    required: true,
+    component: 'Select',
+    componentProps: {
+      options: [
+        { label: '全部数据权限', value: RoleScope.ALL },
+        { label: '本人数据权限', value: RoleScope.SELF },
+        { label: '本部门数据权限', value: RoleScope.DEPT },
+        { label: '本部门及下数据权限', value: RoleScope.DEPT_FOLLOW },
+        { label: '自定义部门数据权限', value: RoleScope.DEPT_CUSTOM },
+      ],
+    },
+  },
+  {
+    label: ' ',
+    field: 'deptCustoms',
+    slot: 'deptCustoms',
+    defaultValue: [],
+    component: 'Input',
+    ifShow: ({ values }) => isDeptCustom(values.scope),
   },
 ];
 

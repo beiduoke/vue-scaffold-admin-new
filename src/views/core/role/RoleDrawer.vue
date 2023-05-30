@@ -68,7 +68,6 @@
             createMessage.error(result.message);
             return;
           }
-
           closeDrawer();
           emit('success');
         } finally {

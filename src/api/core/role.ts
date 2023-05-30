@@ -1,9 +1,13 @@
-import { RoleParams, RolePageParams, RoleListGetResultModel } from './model/roleModel';
+import {
+  RoleParams,
+  RolePageParams,
+  RoleListGetResultModel,
+  RoleDataScopeModel,
+} from './model/roleModel';
 import { defHttp } from '/@/utils/http/core';
 
 import { BasicHandleResult } from './model/baseModel';
 import { MenuListGetResultModel } from './model/menuModel';
-import { DeptListGetResultModel } from './model/deptModel';
 
 const Api = {
   /** 权限角色管理 */
@@ -11,7 +15,7 @@ const Api = {
   RoleWithId: (id) => `/roles/${id}`,
   SetRoleWithIdState: (id) => `/roles/${id}/state`,
   RoleWithIdMenu: (id) => `/roles/${id}/menus`,
-  RoleWithIdData: (id) => `/roles/${id}/data`,
+  RoleWithIdDataScope: (id) => `/roles/${id}/dataScopes`,
 };
 
 /**
@@ -84,19 +88,19 @@ export const getRoleMenuList = (id: string, params: any = {}) =>
 export const handleRoleMenu = (id: string | number, params: any) =>
   defHttp.post<BasicHandleResult>({ url: Api.RoleWithIdMenu(id), params: params });
 /**
- * 处理角色数据
+ * 获取角色数据范围
  * @param id
  * @param params
  * @returns
  */
-export const getRoleDataList = (id: string | number, params: any) =>
-  defHttp.get<DeptListGetResultModel>({ url: Api.RoleWithIdData(id), params: params });
+export const getRoleDataScope = (id: string | number, params: any = {}) =>
+  defHttp.get<RoleDataScopeModel>({ url: Api.RoleWithIdDataScope(id), params: params });
 
 /**
- * 处理角色数据
+ * 处理角色数据范围
  * @param id
  * @param params
  * @returns
  */
-export const handleRoleData = (id: string | number, params: any) =>
-  defHttp.post<BasicHandleResult>({ url: Api.RoleWithIdData(id), params: params });
+export const handleRoleDataScope = (id: string | number, params: RoleDataScopeModel) =>
+  defHttp.post<BasicHandleResult>({ url: Api.RoleWithIdDataScope(id), params: params });

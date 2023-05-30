@@ -40,7 +40,7 @@
     components: { BasicModal, BasicTree, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
-      const treeData = ref<TreeItem[]>([]);
+      const treeData = ref<any>([]);
       const rowId = ref<string>('');
 
       const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
@@ -76,21 +76,23 @@
       async function handleSubmit() {
         try {
           const values = await validate();
-          const menus = values.menu as string[];
           setModalProps({ confirmLoading: true });
           // TODO custom api
+          const menus = values.menu as string[];
           let id = unref(rowId) as string;
           console.log(values);
           let menuIds: string[] = [];
           for (const iterator of menus) {
             menuIds.push(iterator);
           }
-
+          
           const handleMenuResult = await handleRoleMenu(id, {
             menus: menuIds,
           });
-          if (!handleMenuResult.code) {
+          if (handleMenuResult.code) {
             createMessage.error(handleMenuResult.message);
+          } else {
+            createMessage.success(handleMenuResult.message);
           }
           closeModal();
           emit('success');

@@ -17,11 +17,14 @@
                 icon: 'clarity:note-edit-line',
                 label: '菜单权限',
                 onClick: handleMenuAuthority.bind(null, record),
+                // ifShow: hasPermission('sys:role:menu:edit'),
+                auth: 'sys:role:menu:edit',
               },
               {
                 icon: 'clarity:note-edit-line',
                 label: '数据权限',
                 onClick: handleDataAuthority.bind(null, record),
+                auth: 'sys:role:dept:edit',
               },
               {
                 icon: 'ant-design:delete-outlined',
@@ -38,8 +41,8 @@
       </template>
     </BasicTable>
     <RoleDrawer @register="registerDrawer" @success="handleSuccess" />
-    <RoleMenuModal @register="registerMenuModal" @success="handleSuccess" />
-    <RoleDataModal @register="registerDataModal" @success="handleSuccess" />
+    <RoleMenuModal @register="registerMenuModal" />
+    <RoleDataModal @register="registerDataModal" />
   </div>
 </template>
 <script lang="ts">
@@ -48,6 +51,7 @@
   import { useModal } from '/@/components/Modal';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { deleteRole, getRoleListByPage } from '/@/api/core/role';
+  import { usePermission } from '/@/hooks/web/usePermission';
 
   import { useDrawer } from '/@/components/Drawer';
   import RoleDrawer from './RoleDrawer.vue';
@@ -61,6 +65,7 @@
     name: 'RoleManagement',
     components: { BasicTable, RoleDrawer, RoleDataModal, RoleMenuModal, TableAction },
     setup() {
+      const { hasPermission } = usePermission();
       const [registerMenuModal, { openModal: openMenuModal }] = useModal();
       const [registerDataModal, { openModal: openDataModal }] = useModal();
       const [registerDrawer, { openDrawer }] = useDrawer();
@@ -136,6 +141,7 @@
         handleSuccess,
         handleMenuAuthority,
         handleDataAuthority,
+        hasPermission,
       };
     },
   });
