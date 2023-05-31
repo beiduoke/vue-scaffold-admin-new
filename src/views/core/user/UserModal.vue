@@ -47,15 +47,16 @@
         }
 
         const items = await getDeptListTree();
+        console.log(items)
         updateSchema([
           {
             field: 'password',
             show: !unref(isUpdate),
           },
-          {
-            field: 'deptId',
-            componentProps: { treeData: [{ name: '默认部门', id: 0 }, ...items] },
-          },
+          // {
+          //   field: 'deptId',
+          //   componentProps: { treeData: [{ name: '默认部门', id: 0 }, ...items] },
+          // },
         ]);
       });
 

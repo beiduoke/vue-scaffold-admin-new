@@ -6,6 +6,8 @@ import { getAllRoleList } from '/@/api/core/role';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { formatToDateTime } from '/@/utils/dateUtil';
+import { getAllPostList } from '/@/api/core/post';
+import { getDeptListTree } from '/@/api/core/dept';
 
 export const columns: BasicColumn[] = [
   {
@@ -33,19 +35,8 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '手机号',
-    dataIndex: 'mobile',
+    dataIndex: 'phone',
     width: 120,
-  },
-  {
-    title: '邮箱',
-    dataIndex: 'email',
-    width: 120,
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createdAt',
-    width: 180,
-    customRender: ({ value }) => formatToDateTime(value),
   },
   {
     title: '角色',
@@ -53,8 +44,9 @@ export const columns: BasicColumn[] = [
     width: 200,
   },
   {
-    title: '备注',
-    dataIndex: 'remark',
+    title: '邮箱',
+    dataIndex: 'email',
+    width: 120,
   },
   {
     title: '状态',
@@ -67,6 +59,16 @@ export const columns: BasicColumn[] = [
       const text = enable ? '启用' : '停用';
       return h(Tag, { color: color }, () => text);
     },
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'createdAt',
+    width: 180,
+    customRender: ({ value }) => formatToDateTime(value),
+  },
+  {
+    title: '备注',
+    dataIndex: 'remark',
   },
 ];
 
@@ -127,20 +129,35 @@ export const userFormSchema: FormSchema[] = [
       valueField: 'id',
     },
     required: true,
-    ifShow: false,
   },
   {
     field: 'deptId',
     label: '所属部门',
-    component: 'TreeSelect',
+    required: true,
+    component: 'ApiTreeSelect',
     defaultValue: 0,
     componentProps: {
-      fieldNames: {
-        label: 'name',
-        key: 'id',
-        value: 'id',
-      },
-      getPopupContainer: () => document.body,
+      api: getDeptListTree,
+      labelField: 'name',
+      valueField: 'id',
+    },
+    // {
+    //   fieldNames: {
+    //     label: 'name',
+    //     key: 'id',
+    //     value: 'id',
+    //   },
+    //   getPopupContainer: () => document.body,
+    // },
+  },
+  {
+    field: 'postId',
+    label: '岗位',
+    component: 'ApiSelect',
+    componentProps: {
+      api: getAllPostList,
+      labelField: 'name',
+      valueField: 'id',
     },
   },
   {

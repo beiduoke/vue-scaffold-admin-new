@@ -11,6 +11,20 @@ const Api = {
 };
 
 /**
+ * 岗位全部列表
+ * @param params
+ * @returns
+ */
+export const getAllPostList = (params?: PostParams | any) => {
+  return new Promise((resolve, reject) => {
+    defHttp
+      .get<PostListGetResultModel>({ url: Api.Post, params: { ...params, nopaging: true } })
+      .then((data) => resolve(data.items))
+      .catch((e) => reject(e));
+  });
+};
+
+/**
  * 获取岗位列表
  * @param params
  * @returns
