@@ -15,6 +15,7 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { userFormSchema } from './user.data';
   import { getDeptListTree } from '/@/api/core/dept';
+import { TreeItem } from '/@/components/Tree';
 
   export default defineComponent({
     name: 'AccountModal',
@@ -23,6 +24,7 @@
     setup(_, { emit }) {
       const isUpdate = ref(true);
       const rowId = ref('');
+      const deptTreeData = ref<any>([]);
 
       const [registerForm, { setFieldsValue, updateSchema, resetFields, validate }] = useForm({
         labelWidth: 100,
@@ -39,24 +41,27 @@
         setModalProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
 
+        // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
+        if (unref(deptTreeData).length === 0) {
+          const items = await getDeptListTree();
+          deptTreeData.value = items as any as TreeItem[];
+        }
+
         if (unref(isUpdate)) {
           rowId.value = data.record.id;
           setFieldsValue({
             ...data.record,
           });
         }
-
-        const items = await getDeptListTree();
-        console.log(items)
         updateSchema([
           {
             field: 'password',
             show: !unref(isUpdate),
           },
-          // {
-          //   field: 'deptId',
-          //   componentProps: { treeData: [{ name: '默认部门', id: 0 }, ...items] },
-          // },
+          {
+            field: 'deptId',
+            componentProps: { treeData: deptTreeData },
+          },
         ]);
       });
 

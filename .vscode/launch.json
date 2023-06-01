@@ -2,10 +2,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "command": "pnpm vite",
+      "name": "Run pnpm vite",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
       "type": "chrome",
       "request": "launch",
       "name": "Launch Chrome",
-      "url": "http://localhost:3100",
+      "url": "http://localhost:5173",
       "webRoot": "${workspaceFolder}/src",
       "sourceMaps": true
     }

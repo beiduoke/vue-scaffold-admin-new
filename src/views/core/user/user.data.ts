@@ -8,6 +8,8 @@ import { FormSchema } from '/@/components/Table';
 import { formatToDateTime } from '/@/utils/dateUtil';
 import { getAllPostList } from '/@/api/core/post';
 import { getDeptListTree } from '/@/api/core/dept';
+import { RoleListItem } from '/@/api/core/model/roleModel';
+import { DeptListItem } from '/@/api/core/model/deptModel';
 
 export const columns: BasicColumn[] = [
   {
@@ -34,14 +36,30 @@ export const columns: BasicColumn[] = [
     width: 120,
   },
   {
+    title: '部门',
+    dataIndex: 'dept',
+    width: 120,
+    customRender: ({ record }) => {
+      const dept = record.dept as DeptListItem;
+      return h(Tag, { color: 'blue' }, () => dept.name);
+    },
+  },
+  {
     title: '手机号',
     dataIndex: 'phone',
     width: 120,
   },
   {
     title: '角色',
-    dataIndex: 'role',
+    dataIndex: 'roles',
     width: 200,
+    customRender: ({ record }) => {
+      const roles = record.roles as RoleListItem[];
+      return h(
+        'div',
+        roles.map((v) => h(Tag, { color: 'green' }, () => v.name)),
+      );
+    },
   },
   {
     title: '邮箱',
@@ -121,12 +139,13 @@ export const userFormSchema: FormSchema[] = [
   },
   {
     label: '角色',
-    field: 'roleId',
+    field: 'role',
     component: 'ApiSelect',
     componentProps: {
       api: getAllRoleList,
       labelField: 'name',
       valueField: 'id',
+      mode: 'multiple',
     },
     required: true,
   },
@@ -134,21 +153,16 @@ export const userFormSchema: FormSchema[] = [
     field: 'deptId',
     label: '所属部门',
     required: true,
-    component: 'ApiTreeSelect',
-    defaultValue: 0,
+    // component: 'ApiTreeSelect',
+    component: 'TreeSelect',
     componentProps: {
-      api: getDeptListTree,
-      labelField: 'name',
-      valueField: 'id',
+      // api: getDeptListTree,
+      fieldNames: {
+        label: 'name',
+        key: 'id',
+        value: 'id',
+      },
     },
-    // {
-    //   fieldNames: {
-    //     label: 'name',
-    //     key: 'id',
-    //     value: 'id',
-    //   },
-    //   getPopupContainer: () => document.body,
-    // },
   },
   {
     field: 'postId',
