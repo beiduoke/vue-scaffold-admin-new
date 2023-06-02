@@ -103,6 +103,18 @@ export const isUserExist = (account: string) =>
     { errorMessageMode: 'none' },
   );
 
+export const createUser = (params: UserParams) =>
+  defHttp.post<BasicHandleResult>({ url: Api.User, params: params });
+
+/**
+ * 修改用户
+ * @param id
+ * @param params
+ * @returns
+ */
+export const updateUser = (id: string, params: UserParams) =>
+  defHttp.put<BasicHandleResult>({ url: Api.UserWithId(id), params: params });
+
 /**
  * 删除用户
  * @param id

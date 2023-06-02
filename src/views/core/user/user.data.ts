@@ -1,13 +1,13 @@
 import { Avatar, Tag } from 'ant-design-vue/lib/components';
 import { h } from 'vue';
 import { isUserExist } from '../../../api/core/user';
-import { UserState } from '/@/api/core/model/userModel';
-import { getAllRoleList } from '/@/api/core/role';
+import { UserGender, UserState } from '/@/api/core/model/userModel';
+
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { formatToDateTime } from '/@/utils/dateUtil';
 import { getAllPostList } from '/@/api/core/post';
-import { getDeptListTree } from '/@/api/core/dept';
+
 import { RoleListItem } from '/@/api/core/model/roleModel';
 import { DeptListItem } from '/@/api/core/model/deptModel';
 
@@ -31,17 +31,39 @@ export const columns: BasicColumn[] = [
     width: 120,
   },
   {
+    title: '性别',
+    dataIndex: 'gender',
+    width: 50,
+    customRender: ({ record }) => {
+      let color = 'pink';
+      let text = '未知';
+      switch (record.gender) {
+        case UserGender.MAN:
+          text = '男';
+          color = 'blue';
+          break;
+        case UserGender.WOMAN:
+          text = '女';
+          color = 'red';
+          break;
+      }
+      return h(Tag, { color: color }, () => text);
+    },
+  },
+  {
     title: '昵称',
     dataIndex: 'nickName',
     width: 120,
   },
   {
     title: '部门',
-    dataIndex: 'dept',
+    dataIndex: 'deptId',
     width: 120,
     customRender: ({ record }) => {
-      const dept = record.dept as DeptListItem;
-      return h(Tag, { color: 'blue' }, () => dept.name);
+      if (record.deptId > 0) {
+        const dept = record.dept as DeptListItem;
+        return h(Tag, { color: 'blue' }, () => dept.name);
+      }
     },
   },
   {
@@ -51,7 +73,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '角色',
-    dataIndex: 'roles',
+    dataIndex: 'roleIds',
     width: 200,
     customRender: ({ record }) => {
       const roles = record.roles as RoleListItem[];
@@ -135,17 +157,19 @@ export const userFormSchema: FormSchema[] = [
     field: 'password',
     label: '密码',
     component: 'InputPassword',
-    required: true,
   },
   {
     label: '角色',
-    field: 'role',
-    component: 'ApiSelect',
+    field: 'roleIds',
+    component: 'Select',
     componentProps: {
-      api: getAllRoleList,
-      labelField: 'name',
-      valueField: 'id',
       mode: 'multiple',
+      fieldNames: {
+        label: 'name',
+        key: 'id',
+        value: 'id',
+      },
+      placeholder: '请选择角色（可多选）',
     },
     required: true,
   },
@@ -153,10 +177,8 @@ export const userFormSchema: FormSchema[] = [
     field: 'deptId',
     label: '所属部门',
     required: true,
-    // component: 'ApiTreeSelect',
     component: 'TreeSelect',
     componentProps: {
-      // api: getDeptListTree,
       fieldNames: {
         label: 'name',
         key: 'id',
@@ -165,13 +187,17 @@ export const userFormSchema: FormSchema[] = [
     },
   },
   {
-    field: 'postId',
+    field: 'postIds',
     label: '岗位',
-    component: 'ApiSelect',
+    component: 'Select',
     componentProps: {
-      api: getAllPostList,
-      labelField: 'name',
-      valueField: 'id',
+      mode: 'multiple',
+      fieldNames: {
+        label: 'name',
+        key: 'id',
+        value: 'id',
+      },
+      placeholder: '请选择岗位（可多选）',
     },
   },
   {
@@ -181,8 +207,21 @@ export const userFormSchema: FormSchema[] = [
     required: true,
   },
   {
+    field: 'gender',
+    label: '性别',
+    component: 'Select',
+    required: true,
+    componentProps: {
+      options: [
+        { label: '男', value: UserGender.MAN },
+        { label: '女', value: UserGender.WOMAN },
+        { label: '未知', value: UserGender.UNSPECIFIED },
+      ],
+    },
+  },
+  {
     label: '手机号',
-    field: 'mobile',
+    field: 'phone',
     component: 'Input',
     required: true,
   },
@@ -190,7 +229,11 @@ export const userFormSchema: FormSchema[] = [
     label: '邮箱',
     field: 'email',
     component: 'Input',
-    required: true,
+  },
+  {
+    label: '生日',
+    field: 'birthday',
+    component: 'DatePicker',
   },
   {
     field: 'state',

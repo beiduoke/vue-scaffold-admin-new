@@ -1,4 +1,4 @@
-import { PostParams, PostListGetResultModel, PostState } from './model/postModel';
+import { PostParams, PostListGetResultModel, PostState, PostListItem } from './model/postModel';
 import { defHttp } from '/@/utils/http/core';
 
 import { BasicHandleResult } from './model/baseModel';
@@ -16,7 +16,7 @@ const Api = {
  * @returns
  */
 export const getAllPostList = (params?: PostParams | any) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<PostListItem[]>((resolve, reject) => {
     defHttp
       .get<PostListGetResultModel>({ url: Api.Post, params: { ...params, nopaging: true } })
       .then((data) => resolve(data.items))

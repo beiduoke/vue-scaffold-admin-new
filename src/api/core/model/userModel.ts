@@ -7,6 +7,12 @@ export enum UserState {
   BANNED = 'USER_STATE_BANNED',
 }
 
+export enum UserGender {
+  UNSPECIFIED = 'USER_GENDER_UNSPECIFIED',
+  MAN = 'USER_GENDER_MAN',
+  WOMAN = 'USER_GENDER_WOMAN',
+}
+
 /**
  * @description: Login interface parameters
  */
@@ -108,10 +114,12 @@ export interface UserListItem {
   account: string;
   email: string;
   nickname: string;
-  role: number;
+  roleIds: number[];
+  postIds: number[];
   createTime: string;
   remark: string;
   state: number;
+  deptId: number;
 }
 
 export type UserListGetResultModel = BasicFetchResult<UserListItem>;

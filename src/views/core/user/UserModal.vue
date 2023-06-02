@@ -14,8 +14,16 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { userFormSchema } from './user.data';
+  import { createUser, updateUser } from '/@/api/core/user';
   import { getDeptListTree } from '/@/api/core/dept';
-import { TreeItem } from '/@/components/Tree';
+  import { getAllRoleList } from '/@/api/core/role';
+  import { getAllPostList } from '/@/api/core/post';
+  import { BasicDataResult, BasicHandleResult } from '/@/api/core/model/baseModel';
+  import { useMessage } from '/@/hooks/web/useMessage';
+import { RoleListItem } from '/@/api/core/model/roleModel';
+import { PostListItem } from '/@/api/core/model/postModel';
+import { formatToDate } from '/@/utils/dateUtil';
+  const { createMessage } = useMessage();
 
   export default defineComponent({
     name: 'AccountModal',
@@ -24,7 +32,9 @@ import { TreeItem } from '/@/components/Tree';
     setup(_, { emit }) {
       const isUpdate = ref(true);
       const rowId = ref('');
-      const deptTreeData = ref<any>([]);
+      const deptTreeData = ref<any[]>([]);
+      const rolesData = ref<RoleListItem[]>([]);
+      const postsData = ref<PostListItem[]>([]);
 
       const [registerForm, { setFieldsValue, updateSchema, resetFields, validate }] = useForm({
         labelWidth: 100,
@@ -43,8 +53,13 @@ import { TreeItem } from '/@/components/Tree';
 
         // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
         if (unref(deptTreeData).length === 0) {
-          const items = await getDeptListTree();
-          deptTreeData.value = items as any as TreeItem[];
+          deptTreeData.value = await getDeptListTree();
+        }
+        if (unref(rolesData).length === 0) {
+          rolesData.value = await getAllRoleList();
+        }
+        if (unref(postsData).length === 0) {
+          postsData.value = await getAllPostList();
         }
 
         if (unref(isUpdate)) {
@@ -57,10 +72,19 @@ import { TreeItem } from '/@/components/Tree';
           {
             field: 'password',
             show: !unref(isUpdate),
+            required: !unref(isUpdate)
           },
           {
             field: 'deptId',
             componentProps: { treeData: deptTreeData },
+          },
+          {
+            field: 'roleIds',
+            componentProps: { options: rolesData },
+          },
+          {
+            field: 'postIds',
+            componentProps: { options: postsData },
           },
         ]);
       });
@@ -71,9 +95,33 @@ import { TreeItem } from '/@/components/Tree';
         try {
           const values = await validate();
           setModalProps({ confirmLoading: true });
+          console.log(values)
           // TODO custom api
-          console.log(values);
+          let result: BasicHandleResult<BasicDataResult>;
+          if(values.birthday) {
+            values.birthday = formatToDate(values.birthday)
+          }
+          if (rowId.value != '') {
+            result = await updateUser(rowId.value, values);
+          } else {
+            result = await createUser(values);
+          }
+          if (result.code) {
+            createMessage.error(result.message);
+            return;
+          }
           closeModal();
+          
+          
+          values.roles = unref(rolesData.value.filter(v => {
+            let ok = false
+            for (const iterator of values.roleIds) {
+              if (v.id === iterator) ok = true;break
+            }
+            return ok
+          }))
+          
+          console.log(values, "这里来")
           emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: rowId.value } });
         } finally {
           setModalProps({ confirmLoading: false });

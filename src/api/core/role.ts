@@ -3,6 +3,7 @@ import {
   RolePageParams,
   RoleListGetResultModel,
   RoleDataScopeModel,
+  RoleListItem,
 } from './model/roleModel';
 import { defHttp } from '/@/utils/http/core';
 
@@ -34,7 +35,7 @@ export const getRoleListByPage = (params?: RolePageParams) =>
  * @returns
  */
 export const getAllRoleList = (params?: RoleParams | any) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<RoleListItem[]>((resolve, reject) => {
     defHttp
       .get<RoleListGetResultModel>({ url: Api.Role, params: { ...params, nopaging: true } })
       .then((data) => resolve(data.items))
