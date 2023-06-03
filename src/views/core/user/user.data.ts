@@ -129,6 +129,20 @@ export const searchFormSchema: FormSchema[] = [
 
 export const userFormSchema: FormSchema[] = [
   {
+    field: 'deptId',
+    label: '所属部门',
+    required: true,
+    component: 'TreeSelect',
+    componentProps: {
+      fieldNames: {
+        label: 'name',
+        key: 'id',
+        value: 'id',
+      },
+    },
+    colProps: { lg: 24, md: 24 },
+  },
+  {
     field: 'name',
     label: '用户名',
     component: 'Input',
@@ -157,6 +171,7 @@ export const userFormSchema: FormSchema[] = [
     field: 'password',
     label: '密码',
     component: 'InputPassword',
+    rules: [{ required: true, message: '请输入六位密码' }],
   },
   {
     label: '角色',
@@ -172,33 +187,6 @@ export const userFormSchema: FormSchema[] = [
       placeholder: '请选择角色（可多选）',
     },
     required: true,
-  },
-  {
-    field: 'deptId',
-    label: '所属部门',
-    required: true,
-    component: 'TreeSelect',
-    componentProps: {
-      fieldNames: {
-        label: 'name',
-        key: 'id',
-        value: 'id',
-      },
-    },
-  },
-  {
-    field: 'postIds',
-    label: '岗位',
-    component: 'Select',
-    componentProps: {
-      mode: 'multiple',
-      fieldNames: {
-        label: 'name',
-        key: 'id',
-        value: 'id',
-      },
-      placeholder: '请选择岗位（可多选）',
-    },
   },
   {
     field: 'nickName',
@@ -224,16 +212,38 @@ export const userFormSchema: FormSchema[] = [
     field: 'phone',
     component: 'Input',
     required: true,
+    rules: [{ required: true, message: '请输入正确手机号' }],
+  },
+  {
+    field: 'postIds',
+    label: '岗位',
+    component: 'Select',
+    componentProps: {
+      mode: 'multiple',
+      fieldNames: {
+        label: 'name',
+        key: 'id',
+        value: 'id',
+      },
+      placeholder: '请选择岗位（可多选）',
+    },
   },
   {
     label: '邮箱',
     field: 'email',
     component: 'Input',
+    defaultValue: undefined,
+    componentProps: {
+      placeholder: '输入后将进行邮箱验证',
+    },
   },
   {
     label: '生日',
     field: 'birthday',
     component: 'DatePicker',
+    componentProps: {
+      placeholder: '选择出生年月',
+    },
   },
   {
     field: 'state',
@@ -252,5 +262,6 @@ export const userFormSchema: FormSchema[] = [
     label: '备注',
     field: 'remark',
     component: 'InputTextArea',
+    colProps: { lg: 24, md: 24 },
   },
 ];

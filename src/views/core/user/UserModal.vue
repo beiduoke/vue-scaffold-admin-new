@@ -23,6 +23,7 @@
 import { RoleListItem } from '/@/api/core/model/roleModel';
 import { PostListItem } from '/@/api/core/model/postModel';
 import { formatToDate } from '/@/utils/dateUtil';
+import { DeptListItem } from '/@/api/core/model/deptModel';
   const { createMessage } = useMessage();
 
   export default defineComponent({
@@ -32,11 +33,11 @@ import { formatToDate } from '/@/utils/dateUtil';
     setup(_, { emit }) {
       const isUpdate = ref(true);
       const rowId = ref('');
-      const deptTreeData = ref<any[]>([]);
+      const deptTreeData = ref<DeptListItem[]>([]);
       const rolesData = ref<RoleListItem[]>([]);
       const postsData = ref<PostListItem[]>([]);
 
-      const [registerForm, { setFieldsValue, updateSchema, resetFields, validate }] = useForm({
+      const [registerForm, { setFieldsValue, updateSchema,removeSchemaByField, resetFields, validate }] = useForm({
         labelWidth: 100,
         baseColProps: { lg: 12, md: 24 },
         schemas: userFormSchema,
@@ -90,6 +91,21 @@ import { formatToDate } from '/@/utils/dateUtil';
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增账号' : '编辑账号'));
+      
+      /**
+       * 展开部门所有节点
+       * @param depts 
+       */
+      function expandDeptTree(depts: DeptListItem[] = []) :DeptListItem[] {
+        const result: DeptListItem[] = [];
+        for (const iterator of depts) {
+          if (iterator.children.length > 0){
+            result.push(...expandDeptTree(iterator.children));
+          }
+          result.push(iterator);
+        }
+        return result
+      }
 
       async function handleSubmit() {
         try {
@@ -103,6 +119,13 @@ import { formatToDate } from '/@/utils/dateUtil';
           }
           if (rowId.value != '') {
             result = await updateUser(rowId.value, values);
+            // 处理数据回传
+            const roles = ref<RoleListItem[]>([])
+            for (const iterator of values.roleIds) {
+              roles.value.push(rolesData.value.find(v => v.id == iterator) as RoleListItem)
+            }
+            values.dept = (expandDeptTree(deptTreeData.value) as DeptListItem[]) .find(v => v.id === values.deptId)
+            values.roles = roles.value
           } else {
             result = await createUser(values);
           }
@@ -111,17 +134,6 @@ import { formatToDate } from '/@/utils/dateUtil';
             return;
           }
           closeModal();
-          
-          
-          values.roles = unref(rolesData.value.filter(v => {
-            let ok = false
-            for (const iterator of values.roleIds) {
-              if (v.id === iterator) ok = true;break
-            }
-            return ok
-          }))
-          
-          console.log(values, "这里来")
           emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: rowId.value } });
         } finally {
           setModalProps({ confirmLoading: false });
