@@ -8,6 +8,7 @@
       :clickRowToExpand="false"
       :treeData="treeData"
       :fieldNames="{ key: 'id', title: 'name' }"
+      :defaultExpandLevel="5"
       @select="handleSelect"
     />
   </div>
@@ -24,7 +25,7 @@
 
     emits: ['select'],
     setup(_, { emit }) {
-      const treeData = ref<TreeItem[]>([]);
+      const treeData = ref<any[]>([]);
 
       async function fetch() {
         treeData.value = (await getDeptList()) as unknown as TreeItem[];

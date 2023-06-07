@@ -165,8 +165,6 @@ export const formSchema: FormSchema[] = [
         if (formModel.name === '' || formModel.name === undefined) {
           formModel.name = py.join('');
           formActionType.setFieldsValue({ name: py.join('') });
-        } else {
-          console.log('名称存在不进行覆盖');
         }
       }, 300);
       return {
@@ -245,6 +243,13 @@ export const formSchema: FormSchema[] = [
     ifShow: ({ values }) => !isDir(values.type),
   },
   {
+    field: 'apiResource',
+    label: '接口资源',
+    component: 'Input',
+    ifShow: ({ values }) => !isDir(values.type),
+    required: ({ values }) => isAbility(values.type) || values.linkType === MenuLinkType.NO,
+  },
+  {
     field: 'remarks',
     label: '备注',
     component: 'InputTextArea',
@@ -269,7 +274,7 @@ export const formSchema: FormSchema[] = [
     label: '外链设置',
     component: 'RadioButtonGroup',
     defaultValue: MenuLinkType.NO,
-    componentProps: ({ formActionType }) => {
+    componentProps: ({ formActionType, formModel }) => {
       const updateLinkUrl = (disabled = false) =>
         formActionType.updateSchema({ field: 'linkUrl', componentProps: { disabled } });
       return {

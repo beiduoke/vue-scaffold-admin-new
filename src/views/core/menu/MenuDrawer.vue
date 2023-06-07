@@ -26,7 +26,7 @@
   import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form';
   import { buttonsColumns, formSchema, paramsColumns } from './menu.data';
-  import { Input, Card, Space } from 'ant-design-vue';
+  import { Input, Card, Space, Select } from 'ant-design-vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
   import { createMenu, getMenuById, getMenuListTree, updateMenu } from '/@/api/core/menu';
@@ -45,6 +45,7 @@
       [Space.name]: Space,
       [Card.name]: Card,
       [Input.name]: Input,
+      [Select.name]: Select,
       [Input.Group.name]: Input.Group,
       MenuParamsTable,
     },
