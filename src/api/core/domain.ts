@@ -11,7 +11,7 @@ import { BasicDataResult, BasicHandleResult } from './model/baseModel';
 const Api = {
   /** 租户管理 */
   Domain: '/domains',
-  SetDomainWithId: (id) => `/domains/${id}/state`,
+  SetDomainWithIdState: (id) => `/domains/${id}/state`,
   DomainWithPidListTree: (pid) => `/domains/${pid}/trees`,
   DomainWithId: (id) => `/domains/${id}`,
   DomainWithCode: (code) => `/domains/${code}/code`,
@@ -105,7 +105,7 @@ export const deleteDomain = (id: string) =>
  * @returns
  */
 export const setDomainState = (id: string, state: DomainState) =>
-  defHttp.put<BasicHandleResult>({ url: Api.SetDomainWithId(id), params: { state } });
+  defHttp.put<BasicHandleResult>({ url: Api.SetDomainWithIdState(id), params: { state } });
 
 /**
  * 处理租户菜单

@@ -114,6 +114,14 @@ export const createUser = (params: UserParams) =>
  */
 export const updateUser = (id: string, params: UserParams) =>
   defHttp.put<BasicHandleResult>({ url: Api.UserWithId(id), params: params });
+/**
+ * 设置状态
+ * @param id
+ * @param params
+ * @returns
+ */
+export const setUserState = (id: string, params: UserParams) =>
+  defHttp.put<BasicHandleResult>({ url: Api.SetUserWithIdState(id), params: params });
 
 /**
  * 删除用户

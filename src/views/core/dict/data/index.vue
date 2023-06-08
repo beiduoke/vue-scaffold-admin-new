@@ -2,7 +2,8 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增资源 </a-button>
+        <a-button type="dashed" @click="returnList"> 返回字典列表 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新增字典数据 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
@@ -10,6 +11,7 @@
             :actions="[
               {
                 icon: 'clarity:note-edit-line',
+                label: '修改',
                 onClick: handleEdit.bind(null, record),
               },
               {
@@ -26,51 +28,63 @@
         </template>
       </template>
     </BasicTable>
-    <ResourceDrawer @register="registerDrawer" @success="handleSuccess" />
+    <DictDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { deleteResource, getResourceListByPage } from '/@/api/core/resource';
+  import { deleteDictData, getDictDataListByPage } from '/@/api/core/dict';
+  import { usePermission } from '/@/hooks/web/usePermission';
 
   import { useDrawer } from '/@/components/Drawer';
-  import ResourceDrawer from './ResourceDrawer.vue';
+  import DictDrawer from './DataDrawer.vue';
 
-  import { columns, searchFormSchema } from './resource.data';
+  import { columns, searchFormSchema } from './data.data';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { useGo } from '/@/hooks/web/usePage';
+  import { useRoute } from 'vue-router';
   const { createMessage } = useMessage();
   export default defineComponent({
-    name: 'ResourceManagement',
-    components: { BasicTable, ResourceDrawer, TableAction },
+    name: 'DictDataManagement',
+    components: { BasicTable, DictDrawer, TableAction },
     setup() {
+      const go = useGo();
+      const route = useRoute();
+      const routeParams = ref({})
+      const dictType = ref(route.params?.dict_type)
+      if (dictType.value) {
+        routeParams.value = {dictType: dictType.value}
+      }
+      const { hasPermission } = usePermission();
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const [registerTable, { reload, setLoading }] = useTable({
-        title: '资源列表',
-        api: getResourceListByPage,
+      const [registerTable, { reload,updateTableDataRecord, setLoading }] = useTable({
+        title: '字典数据列表',
+        api: getDictDataListByPage,
         columns,
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema,
+          mergeDynamicData: routeParams.value
         },
-        handleSearchInfoFn: (query) => {
-          query = { 'query.group': query.group, 'query.name': query.name };
-          console.log(query);
-          return query;
-        },
+        searchInfo: routeParams.value,
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
         showIndexColumn: false,
         actionColumn: {
-          width: 80,
+          width: 300,
           title: '操作',
           dataIndex: 'action',
           // slots: { customRender: 'action' },
           fixed: undefined,
         },
       });
+
+      function returnList() {
+        go("/middle/dict")
+      }
 
       function handleCreate() {
         openDrawer(true, {
@@ -89,7 +103,7 @@
         try {
           setLoading(true);
           const id = record.id;
-          const result = await deleteResource(id);
+          const result = await deleteDictData(id);
           if (result.code) {
             createMessage.error(result.message);
             return;
@@ -100,18 +114,30 @@
         }
       }
 
-      function handleSuccess() {
-        reload();
+      function handleSuccess({ isUpdate, values }) {
+        if (isUpdate) {
+          // 演示不刷新表格直接更新内部数据。
+          // 注意：updateTableDataRecord要求表格的rowKey属性为string并且存在于每一行的record的keys中
+          updateTableDataRecord(values.id, values);
+        } else {
+          reload();
+        }
       }
 
       return {
         registerTable,
         registerDrawer,
+        returnList,
         handleCreate,
         handleEdit,
         handleDelete,
         handleSuccess,
+        hasPermission,
       };
     },
   });
 </script>
+
+function useRoute() {
+  throw new Error('Function not implemented.');
+}

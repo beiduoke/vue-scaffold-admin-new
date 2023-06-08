@@ -2,9 +2,12 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增角色 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新增字典 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'type'">
+          <a href="javascript:void(1);" @click="dumpData(record)">{{ record.type }}</a>
+        </template>
         <template v-if="column.key === 'action'">
           <TableAction
             :actions="[
@@ -12,19 +15,6 @@
                 icon: 'clarity:note-edit-line',
                 label: '修改',
                 onClick: handleEdit.bind(null, record),
-              },
-              {
-                icon: 'clarity:note-edit-line',
-                label: '菜单权限',
-                onClick: handleMenuAuthority.bind(null, record),
-                // ifShow: hasPermission('system:role:menu:handle'),
-                auth: 'system:role:menu:handle',
-              },
-              {
-                icon: 'clarity:note-edit-line',
-                label: '数据权限',
-                onClick: handleDataAuthority.bind(null, record),
-                auth: 'system:role:dataScope:handle',
               },
               {
                 icon: 'ant-design:delete-outlined',
@@ -40,38 +30,33 @@
         </template>
       </template>
     </BasicTable>
-    <RoleDrawer @register="registerDrawer" @success="handleSuccess" />
-    <RoleMenuModal @register="registerMenuModal" />
-    <RoleDataModal @register="registerDataModal" />
+    <DictDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
 
-  import { useModal } from '/@/components/Modal';
+  import { useGo } from '/@/hooks/web/usePage';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { deleteRole, getRoleListByPage } from '/@/api/core/role';
+  import { deleteDict, getDictListByPage } from '/@/api/core/dict';
   import { usePermission } from '/@/hooks/web/usePermission';
 
   import { useDrawer } from '/@/components/Drawer';
-  import RoleDrawer from './RoleDrawer.vue';
-  import RoleMenuModal from './RoleMenuModal.vue';
-  import RoleDataModal from './RoleDataModal.vue';
+  import DictDrawer from './DictDrawer.vue';
 
-  import { columns, searchFormSchema } from './role.data';
+  import { columns, searchFormSchema } from './dict.data';
   import { useMessage } from '/@/hooks/web/useMessage';
   const { createMessage } = useMessage();
   export default defineComponent({
-    name: 'RoleManagement',
-    components: { BasicTable, RoleDrawer, RoleDataModal, RoleMenuModal, TableAction },
+    name: 'DictManagement',
+    components: { BasicTable, DictDrawer, TableAction },
     setup() {
+      const go = useGo();
       const { hasPermission } = usePermission();
-      const [registerMenuModal, { openModal: openMenuModal }] = useModal();
-      const [registerDataModal, { openModal: openDataModal }] = useModal();
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const [registerTable, { reload, setLoading }] = useTable({
-        title: '角色列表',
-        api: getRoleListByPage,
+      const [registerTable, { reload,updateTableDataRecord, setLoading }] = useTable({
+        title: '字典列表',
+        api: getDictListByPage,
         columns,
         formConfig: {
           labelWidth: 120,
@@ -103,19 +88,11 @@
         });
       }
 
-      function handleMenuAuthority(record: Recordable) {
-        openMenuModal(true, { record });
-      }
-
-      function handleDataAuthority(record: Recordable) {
-        openDataModal(true, { record });
-      }
-
       async function handleDelete(record: Recordable) {
         try {
           setLoading(true);
           const id = record.id;
-          const result = await deleteRole(id);
+          const result = await deleteDict(id);
           if (result.code) {
             createMessage.error(result.message);
             return;
@@ -126,22 +103,29 @@
         }
       }
 
-      function handleSuccess() {
-        reload();
+      function handleSuccess({ isUpdate, values }) {
+        if (isUpdate) {
+          // 演示不刷新表格直接更新内部数据。
+          // 注意：updateTableDataRecord要求表格的rowKey属性为string并且存在于每一行的record的keys中
+          updateTableDataRecord(values.id, values);
+        } else {
+          reload();
+        }
       }
 
+
+      async function dumpData(record: Recordable) {
+        go(`/middle/dict/data/${record.type}`);
+      }
       return {
         registerTable,
         registerDrawer,
-        registerMenuModal,
-        registerDataModal,
         handleCreate,
         handleEdit,
         handleDelete,
         handleSuccess,
-        handleMenuAuthority,
-        handleDataAuthority,
         hasPermission,
+        dumpData,
       };
     },
   });

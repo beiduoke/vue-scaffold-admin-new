@@ -37,7 +37,7 @@ import { DeptListItem } from '/@/api/core/model/deptModel';
       const rolesData = ref<RoleListItem[]>([]);
       const postsData = ref<PostListItem[]>([]);
 
-      const [registerForm, { setFieldsValue, updateSchema,removeSchemaByField, resetFields, validate }] = useForm({
+      const [registerForm, { setFieldsValue, updateSchema, resetFields, validate }] = useForm({
         labelWidth: 100,
         baseColProps: { lg: 12, md: 24 },
         schemas: userFormSchema,

@@ -119,7 +119,7 @@
         const items = await getMenuListTree();
         updateSchema({
           field: 'parentId',
-          componentProps: { treeData: [{ title: '顶级菜单', id: 0 }, ...items] },
+          componentProps: { treeData: [{ title: '顶级菜单', id: '0' }, ...items] },
         });
       });
 
