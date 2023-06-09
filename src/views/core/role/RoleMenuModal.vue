@@ -77,17 +77,9 @@
         try {
           const values = await validate();
           setModalProps({ confirmLoading: true });
-          // TODO custom api
-          const menus = values.menu as string[];
-          let id = unref(rowId) as string;
-          console.log(values);
-          let menuIds: string[] = [];
-          for (const iterator of menus) {
-            menuIds.push(iterator);
-          }
-          
+          // TODO custom api          
           const handleMenuResult = await handleRoleMenu(id, {
-            menus: menuIds,
+            menuIds: values.menu,
           });
           if (handleMenuResult.code) {
             createMessage.error(handleMenuResult.message);

@@ -17,7 +17,6 @@
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
   import { createRole, updateRole } from '/@/api/core/role';
-  import { RoleListItem } from '/@/api/core/model/roleModel';
   import { BasicHandleResult, BasicDataResult } from '/@/api/core/model/baseModel';
   import { useMessage } from '/@/hooks/web/useMessage';
   const { createMessage } = useMessage();
@@ -28,7 +27,7 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
-      const record = ref<RoleListItem>();
+      const rowId = ref('');
 
       const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
         labelWidth: 90,
@@ -38,12 +37,11 @@
       });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
-        record.value = undefined;
         resetFields();
         setDrawerProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
         if (unref(isUpdate)) {
-          record.value = data.record;
+          rowId.value = data.record.id;
           setFieldsValue({
             ...data.record,
           });
@@ -57,10 +55,9 @@
           const values = await validate();
           setDrawerProps({ confirmLoading: true });
           // TODO custom api
-          let id = (unref(record)?.id as string) ?? '';
           let result: BasicHandleResult<BasicDataResult>;
-          if (id != '') {
-            result = await updateRole(id, values);
+          if (rowId.value != '') {
+            result = await updateRole(rowId.value, values);
           } else {
             result = await createRole(values);
           }

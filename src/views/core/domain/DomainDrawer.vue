@@ -46,7 +46,6 @@
     handleDomainMenu,
     updateDomain,
   } from '/@/api/core/domain';
-  import { DomainListItem } from '/@/api/core/model/domainModel';
   import { BasicHandleResult, BasicDataResult } from '/@/api/core/model/baseModel';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { getMenuListTree } from '/@/api/core/menu';
@@ -58,8 +57,8 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
-      const treeData = ref<TreeItem[]>([]);
-      const record = ref<DomainListItem>();
+      const treeData = ref<any[]>([]);
+      const rowId = ref('');
 
       const [registerForm, { resetFields, updateSchema, setFieldsValue, validate }] = useForm({
         labelWidth: 90,
@@ -77,7 +76,6 @@
         });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
-        record.value = undefined;
         resetFields();
         setDrawerProps({ confirmLoading: false });
         // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
@@ -88,12 +86,12 @@
         isUpdate.value = !!data?.isUpdate;
         if (unref(isUpdate)) {
           // 更新数据
-          record.value = data.record;
+          rowId.value = data.record.id;
           setFieldsValue({
             ...data.record,
           });
           // 更新分配菜单
-          const { items } = await getDomainMenuList(data.record.id);
+          const { items } = await getDomainMenuList(rowId.value);
           setMenuFieldsValue({ menu: items.map((item: { id: any; }) => item.id) });
         }
 
@@ -111,24 +109,19 @@
           setDrawerProps({ confirmLoading: true });
           const [values, menuValues] = await Promise.all([validate(), validateMenuForm()]);
           // TODO custom api
-          const id = (unref(record)?.id as string) ?? '';
           let result: BasicHandleResult<BasicDataResult>;
-          if (id != '') {
-            result = await updateDomain(id, values);
+          if (rowId.value != '') {
+            result = await updateDomain(rowId.value, values);
           } else {
             result = await createDomain(values);
+            rowId.value = result.result.id.toString()
           }
           if (result.code) {
             createMessage.error(result.message);
             return;
           }
 
-          let menuIds: any[] = [];
-          for (const iterator of menuValues.menu) {
-            menuIds.push({ id: iterator });
-          }
-
-          const handleMenuResult = await handleDomainMenu(id, { menus: menuIds });
+          const handleMenuResult = await handleDomainMenu(rowId.value, { menuIds: menuValues.menu });
           if (handleMenuResult.code) {
             createMessage.error(handleMenuResult.message);
           }
