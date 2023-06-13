@@ -65,13 +65,13 @@ export const columns: BasicColumn[] = [
 
 export const searchFormSchema: FormSchema[] = [
   {
-    field: 'roleNme',
+    field: 'name',
     label: '角色名称',
     component: 'Input',
     colProps: { span: 8 },
   },
   {
-    field: 'status',
+    field: 'state',
     label: '状态',
     component: 'Select',
     componentProps: {

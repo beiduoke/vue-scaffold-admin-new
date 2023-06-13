@@ -11,30 +11,12 @@
     <a-card title="基础信息" :bordered="false">
       <BasicForm @register="registerForm" />
     </a-card>
-    <a-card title="菜单分配" :bordered="false">
-      <BasicForm @register="registerMenuForm">
-        <template #menu="{ model, field }">
-          <BasicTree
-            v-model:value="model[field]"
-            :treeData="treeData"
-            :fieldNames="{ title: 'title', key: 'id' }"
-            checkable
-            toolbar
-            autoExpandParent
-            defaultExpandAll
-            clickRowToExpand
-            defaultExpandLevel="10"
-            title="菜单分配"
-          />
-        </template>
-      </BasicForm>
-    </a-card>
   </BasicDrawer>
 </template>
 <script lang="ts">
   import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { formSchema, menuFormSchema } from './domain.data';
+  import { formSchema } from './domain.data';
   import { Card } from 'ant-design-vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicTree, TreeItem } from '/@/components/Tree';
@@ -42,8 +24,6 @@
   import {
     createDomain,
     getDomainListTree,
-    getDomainMenuList,
-    handleDomainMenu,
     updateDomain,
   } from '/@/api/core/domain';
   import { BasicHandleResult, BasicDataResult } from '/@/api/core/model/baseModel';
@@ -67,13 +47,6 @@
         showActionButtonGroup: false,
       });
 
-      const [registerMenuForm, { setFieldsValue: setMenuFieldsValue, validate: validateMenuForm }] =
-        useForm({
-          labelWidth: 90,
-          baseColProps: { span: 24 },
-          schemas: menuFormSchema,
-          showActionButtonGroup: false,
-        });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();
@@ -90,9 +63,6 @@
           setFieldsValue({
             ...data.record,
           });
-          // 更新分配菜单
-          const { items } = await getDomainMenuList(rowId.value);
-          setMenuFieldsValue({ menu: items.map((item: { id: any; }) => item.id) });
         }
 
         const items = await getDomainListTree();
@@ -107,25 +77,19 @@
       async function handleSubmit() {
         try {
           setDrawerProps({ confirmLoading: true });
-          const [values, menuValues] = await Promise.all([validate(), validateMenuForm()]);
+          // const [values] = await Promise.all([validate(), validateMenuForm()]);
+          const values = await validate();
           // TODO custom api
           let result: BasicHandleResult<BasicDataResult>;
           if (rowId.value != '') {
             result = await updateDomain(rowId.value, values);
           } else {
             result = await createDomain(values);
-            rowId.value = result.result.id.toString()
           }
           if (result.code) {
             createMessage.error(result.message);
             return;
           }
-
-          const handleMenuResult = await handleDomainMenu(rowId.value, { menuIds: menuValues.menu });
-          if (handleMenuResult.code) {
-            createMessage.error(handleMenuResult.message);
-          }
-
           closeDrawer();
           emit('success');
         } finally {
@@ -136,7 +100,6 @@
       return {
         registerDrawer,
         registerForm,
-        registerMenuForm,
         getTitle,
         handleSubmit,
         treeData,

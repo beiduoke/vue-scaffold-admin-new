@@ -29,14 +29,14 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { BasicTree, TreeItem } from '/@/components/Tree';
-  import { menuFormSchema } from './role.data';
-  import { getUserMenuListTree } from '/@/api/core/user';
-  import { getRoleMenuList, handleRoleMenu } from '/@/api/core/role';
+  import { menuFormSchema } from './domain.data';
+  import { getMenuListTree } from '/@/api/core/menu';
+  import { getDomainMenuList, handleDomainMenu } from '/@/api/core/domain';
   import { useMessage } from '/@/hooks/web/useMessage';
   const { createMessage } = useMessage();
 
   export default defineComponent({
-    name: 'RoleMenuModal',
+    name: 'DomainMenuModal',
     components: { BasicModal, BasicTree, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
@@ -59,12 +59,12 @@
         rowId.value = data.record.id;
         // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
         if (unref(treeData).length === 0) {
-          const items = await getUserMenuListTree();
+          const items = await getMenuListTree();
           treeData.value = items as any as TreeItem[];
         }
         
         // 更新分配菜单
-        const { items } = await getRoleMenuList(data.record.id);
+        const { items } = await getDomainMenuList(data.record.id);
         setFieldsValue({
           name: data.record.name,
           menu: items.map((item: { id: any; }) => item.id),
@@ -78,7 +78,7 @@
           const values = await validate();
           setModalProps({ confirmLoading: true });
           // TODO custom api          
-          const handleMenuResult = await handleRoleMenu(rowId.value, {
+          const handleMenuResult = await handleDomainMenu(rowId.value, {
             menuIds: values.menu,
           });
           if (handleMenuResult.code) {

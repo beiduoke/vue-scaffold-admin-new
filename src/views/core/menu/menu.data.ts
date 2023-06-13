@@ -18,7 +18,7 @@ export const columns: BasicColumn[] = [
   {
     title: '菜单标题',
     dataIndex: 'title',
-    width: 200,
+    width: 400,
     align: 'left',
     fixed: 'left',
   },

@@ -6,7 +6,7 @@ import {
 } from './model/domainModel';
 import { defHttp } from '/@/utils/http/core';
 
-import { BasicDataResult, BasicHandleResult } from './model/baseModel';
+import { BasicHandleResult } from './model/baseModel';
 
 const Api = {
   /** 租户管理 */

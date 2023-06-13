@@ -15,8 +15,8 @@
               },
               {
                 icon: 'clarity:note-edit-line',
-                label: '用户角色',
-                onClick: handleEditRole.bind(null, record),
+                label: '菜单管理',
+                onClick: handleEditMenu.bind(null, record),
               },
               {
                 icon: 'ant-design:delete-outlined',
@@ -34,6 +34,7 @@
       </template>
     </BasicTable>
     <DomainDrawer @register="registerDrawer" @success="handleSuccess" />
+    <DomainMenuModal @register="registerMenuModal" />
   </div>
 </template>
 <script lang="ts">
@@ -43,16 +44,19 @@
   import { deleteDomain, getDomainListTree } from '/@/api/core/domain';
 
   import { useDrawer } from '/@/components/Drawer';
+  import { useModal } from '/@/components/Modal';
   import DomainDrawer from './DomainDrawer.vue';
+  import DomainMenuModal from './DomainMenuModal.vue';
 
   import { columns, searchFormSchema } from './domain.data';
   import { useMessage } from '/@/hooks/web/useMessage';
   const { createMessage } = useMessage();
   export default defineComponent({
     name: 'DomainManagement',
-    components: { BasicTable, DomainDrawer, TableAction },
+    components: { BasicTable, DomainDrawer, TableAction, DomainMenuModal },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
+      const [registerMenuModal, { openModal: openMenuModal }] = useModal();
       const [registerTable, { reload, expandAll, setLoading }] = useTable({
         title: '租户列表',
         api: (arg) => getDomainListTree(0, arg),
@@ -106,11 +110,8 @@
         }
       }
 
-      function handleEditRole(record: Recordable) {
-        openDrawer(true, {
-          record,
-          isUpdate: true,
-        });
+      function handleEditMenu(record: Recordable) {
+        openMenuModal(true, { record });
       }
 
       function handleSuccess() {
@@ -126,10 +127,11 @@
         registerDrawer,
         handleCreate,
         handleEdit,
-        handleEditRole,
+        handleEditMenu,
         handleDelete,
         handleSuccess,
         onFetchSuccess,
+        registerMenuModal,
       };
     },
   });

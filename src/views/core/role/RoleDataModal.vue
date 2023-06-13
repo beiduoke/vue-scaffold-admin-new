@@ -82,8 +82,7 @@ import { getRoleDataScope, handleRoleDataScope } from '/@/api/core/role';
           const values = await validate();
           setModalProps({ confirmLoading: true });
           // TODO custom api
-          let id = unref(rowId) as string;
-          const handleDataScopeResult = await handleRoleDataScope(id, {
+          const handleDataScopeResult = await handleRoleDataScope(rowId.value, {
             scope: values.scope,
             deptCustoms: values.deptCustoms || []
           });

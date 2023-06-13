@@ -127,6 +127,13 @@ export const formSchema: FormSchema[] = [
 
 export const menuFormSchema: FormSchema[] = [
   {
+    field: 'name',
+    label: '租户名称',
+    required: true,
+    component: 'Input',
+    componentProps: { disabled: true },
+  },
+  {
     label: ' ',
     field: 'menu',
     slot: 'menu',
