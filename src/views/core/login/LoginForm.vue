@@ -132,7 +132,7 @@
 
   const formData = reactive({
     account: 'xiong',
-    password: '123123',
+    password: '123456',
     domain: {
       code: '1557658909480354584',
       name: '中台管理平台',

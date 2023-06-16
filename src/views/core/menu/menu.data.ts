@@ -248,6 +248,7 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
     ifShow: ({ values }) => !isDir(values.type),
     required: ({ values }) => isAbility(values.type) || values.linkType === MenuLinkType.NO,
+    componentProps: { placeholder: '输入接口资源地址' },
   },
   {
     field: 'remarks',
@@ -300,7 +301,6 @@ export const formSchema: FormSchema[] = [
     },
     ifShow: ({ values }) => isMenu(values.type),
     colProps: { lg: 12, md: 12 },
-    // show: false,
   },
   {
     field: 'linkUrl',

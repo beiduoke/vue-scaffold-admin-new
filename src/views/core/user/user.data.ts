@@ -171,6 +171,7 @@ export const userFormSchema: FormSchema[] = [
     field: 'password',
     label: '密码',
     component: 'InputPassword',
+    defaultValue: '',
     rules: [{ required: true, message: '请输入六位密码' }],
   },
   {
@@ -215,6 +216,12 @@ export const userFormSchema: FormSchema[] = [
     rules: [{ required: true, message: '请输入正确手机号' }],
   },
   {
+    field: 'realName',
+    label: '真实名称',
+    component: 'Input',
+    defaultValue: '',
+  },
+  {
     field: 'postIds',
     label: '岗位',
     component: 'Select',
@@ -232,7 +239,7 @@ export const userFormSchema: FormSchema[] = [
     label: '邮箱',
     field: 'email',
     component: 'Input',
-    defaultValue: undefined,
+    defaultValue: '',
     componentProps: {
       placeholder: '输入后将进行邮箱验证',
     },

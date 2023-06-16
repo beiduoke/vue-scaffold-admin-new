@@ -54,7 +54,9 @@ export interface RouteItem {
   alias?: string | string[];
   redirect?: string;
   caseSensitive?: boolean;
-  children?: RouteItem[];
+  children: RouteItem[];
+  parentId: string;
+  id: string;
 }
 
 /**
@@ -70,7 +72,7 @@ export type MenuParams = {
 export interface MenuListItem {
   id: string;
   sort: string;
-  parentId: number | string;
+  parentId: string;
   createdAt: string;
   state: MenuState;
   icon: string;

@@ -111,15 +111,21 @@ import { DeptListItem } from '/@/api/core/model/deptModel';
         try {
           const values = await validate();
           setModalProps({ confirmLoading: true });
-          console.log(values)
           // TODO custom api
           let result: BasicHandleResult<BasicDataResult>;
           if(values.birthday) {
             values.birthday = formatToDate(values.birthday)
           }
+          if (values.email == "") {
+            values.email = undefined
+          }
+          if (values.realName == "") {
+            values.realName = undefined
+          }
           if (rowId.value != '') {
+            values.password = undefined
             result = await updateUser(rowId.value, values);
-            // 处理数据回传
+            // 处理数据回传处理
             const roles = ref<RoleListItem[]>([])
             for (const iterator of values.roleIds) {
               roles.value.push(rolesData.value.find(v => v.id == iterator) as RoleListItem)

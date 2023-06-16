@@ -11,7 +11,7 @@ import {
 
 import { ErrorMessageMode } from '/#/axios';
 import { BasicFetchResult, BasicPageParams, BasicHandleResult } from './model/baseModel';
-import { RouteItem } from './model/menuModel';
+import { MenuListItem, RouteItem } from './model/menuModel';
 
 const Api = {
   /** 用户管理 */
@@ -153,9 +153,9 @@ export const getUserMenuRouterListTree = () => {
  * @returns promise
  */
 export const getUserMenuListTree = () => {
-  return new Promise<RouteItem[]>((resolve, reject) => {
+  return new Promise<MenuListItem[]>((resolve, reject) => {
     defHttp
-      .get<BasicFetchResult<RouteItem>>({ url: Api.UserMenuListTrees })
+      .get<BasicFetchResult<MenuListItem>>({ url: Api.UserMenuListTrees })
       .then((data) => resolve(data.items))
       .catch((e) => reject(e));
   });

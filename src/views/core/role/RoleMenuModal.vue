@@ -33,6 +33,7 @@
   import { getUserMenuListTree } from '/@/api/core/user';
   import { getRoleMenuList, handleRoleMenu } from '/@/api/core/role';
   import { useMessage } from '/@/hooks/web/useMessage';
+import { MenuListItem } from '/@/api/core/model/menuModel';
   const { createMessage } = useMessage();
 
   export default defineComponent({
@@ -53,6 +54,31 @@
         },
       });
 
+      const walkTrees = (routerTrees: MenuListItem[]):MenuListItem[] =>  {
+        let result:MenuListItem[] = []
+        for (const iterator of routerTrees) {
+          result.push(iterator)
+          if (iterator.children.length > 0) {
+            result.push(...walkTrees(iterator.children))
+          }
+        }
+        return result
+      }
+
+      const treeWalk = (items: MenuListItem[], pid?: string):MenuListItem[] => {
+        let result: MenuListItem[] = []
+        for (const iterator of items) {
+          if (pid === undefined) {
+            result.push(iterator)
+            continue
+          }
+          if (iterator.parentId == pid) {
+            result.push(...treeWalk(items, iterator.id))
+          }
+        }
+        return result;
+      }
+
       const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
         resetFields();
         setModalProps({ confirmLoading: false });
@@ -62,12 +88,31 @@
           const items = await getUserMenuListTree();
           treeData.value = items as any as TreeItem[];
         }
-        
         // 更新分配菜单
-        const { items } = await getRoleMenuList(data.record.id);
+        let { items } = await getRoleMenuList(data.record.id);
+        const itemParentIds: string[] = []
+        // 处理选中菜单子集小于所有最大菜单子集将父级进行删除
+        walkTrees(treeData.value as MenuListItem[]).forEach((current) => {
+          const currentChildLen = current.children.length
+          if (currentChildLen> 0) {
+            let itemChildLen :number = 0
+            let itemParentId = ""
+            items.forEach((item) => {
+              if (item.parentId == current.id) {
+                if (itemChildLen == 0) {
+                  itemParentId = item.parentId
+                }
+                itemChildLen++
+              }
+            })
+            if (currentChildLen > itemChildLen && itemParentId !== "") {
+              itemParentIds.push(itemParentId)
+            }
+          }
+        })
         setFieldsValue({
           name: data.record.name,
-          menu: items.map((item: { id: any; }) => item.id),
+          menu: items.filter(element => !itemParentIds.includes(element.id)).map((item: { id: any; }) => item.id),
         });
       });
 
