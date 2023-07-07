@@ -1,7 +1,7 @@
-import { PostParams, PostListGetResultModel, PostState, PostListItem } from './model/postModel';
+import { PostParams, PostListGetResultModel, PostListItem } from './model/postModel';
 import { defHttp } from '/@/utils/http/core';
 
-import { BasicHandleResult } from './model/baseModel';
+import { BasicHandleResult, State } from './model/baseModel';
 
 const Api = {
   /** 岗位管理 */
@@ -66,5 +66,5 @@ export const deletePost = (id: string) =>
  * @param params
  * @returns
  */
-export const setPostState = (id: string, state: PostState) =>
+export const setPostState = (id: string, state: State) =>
   defHttp.put<BasicHandleResult>({ url: Api.SetPostWithIdState(id), params: { state } });

@@ -5,7 +5,8 @@ import { Switch } from 'ant-design-vue';
 import { setRoleState } from '/@/api/core/role';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { formatToDateTime } from '/@/utils/dateUtil';
-import { RoleScope, RoleState } from '/@/api/core/model/roleModel';
+import { RoleScope } from '/@/api/core/model/roleModel';
+import { State } from '/@/api/core/model/baseModel';
 
 export const columns: BasicColumn[] = [
   {
@@ -28,13 +29,13 @@ export const columns: BasicColumn[] = [
       }
       return h(Switch, {
         disabled: false,
-        checked: record.state === RoleState.ACTIVE,
+        checked: record.state === State.ACTIVE,
         checkedChildren: '已启用',
         unCheckedChildren: '已禁用',
         loading: record.pendingStatus,
         onChange(checked: boolean) {
           record.pendingStatus = true;
-          const newStatus = checked ? RoleState.ACTIVE : RoleState.INACTIVE;
+          const newStatus = checked ? State.ACTIVE : State.INACTIVE;
           const { createMessage } = useMessage();
           setRoleState(record.id, newStatus)
             .then(() => {
@@ -76,8 +77,8 @@ export const searchFormSchema: FormSchema[] = [
     component: 'Select',
     componentProps: {
       options: [
-        { label: '启用', value: RoleState.ACTIVE },
-        { label: '停用', value: RoleState.INACTIVE },
+        { label: '启用', value: State.ACTIVE },
+        { label: '停用', value: State.INACTIVE },
       ],
     },
     colProps: { span: 8 },
@@ -102,11 +103,11 @@ export const formSchema: FormSchema[] = [
     field: 'state',
     label: '角色状态',
     component: 'RadioButtonGroup',
-    defaultValue: RoleState.ACTIVE,
+    defaultValue: State.ACTIVE,
     componentProps: {
       options: [
-        { label: '启用', value: RoleState.ACTIVE },
-        { label: '停用', value: RoleState.INACTIVE },
+        { label: '启用', value: State.ACTIVE },
+        { label: '停用', value: State.INACTIVE },
       ],
     },
   },
@@ -117,7 +118,7 @@ export const formSchema: FormSchema[] = [
   },
 ];
 
-const isDeptCustom = (type: string | keyof RoleScope) => type === RoleScope.DEPT_CUSTOM;
+const isDeptCustom = (type: RoleScope) => type === RoleScope.DEPT_CUSTOM;
 
 export const dataFormSchema: FormSchema[] = [
   {

@@ -9,7 +9,7 @@ import {
 } from './model/dictModel';
 import { defHttp } from '/@/utils/http/core';
 
-import { BasicHandleResult } from './model/baseModel';
+import { BasicHandleResult, State } from './model/baseModel';
 
 const Api = {
   /** 字典管理 */
@@ -63,7 +63,7 @@ export const createDict = (params: DictParams) =>
  * @param state
  * @returns
  */
-export const setDictState = (id: string, state: string) =>
+export const setDictState = (id: string, state: State) =>
   defHttp.put<BasicHandleResult>({
     url: Api.SetDictWithIdState(id),
     params: { state },

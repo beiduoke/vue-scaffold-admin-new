@@ -2,7 +2,7 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { h } from 'vue';
 import { Tag } from 'ant-design-vue';
-import { DeptState } from '/@/api/core/model/deptModel';
+import { State } from '/@/api/core/model/baseModel';
 import { formatToDateTime } from '/@/utils/dateUtil';
 
 export const columns: BasicColumn[] = [
@@ -23,7 +23,7 @@ export const columns: BasicColumn[] = [
     width: 80,
     customRender: ({ record }) => {
       const state = record.state;
-      const enable = state === DeptState.ACTIVE;
+      const enable = state === State.ACTIVE;
       const color = enable ? 'green' : 'red';
       const text = enable ? '启用' : '停用';
       return h(Tag, { color: color }, () => text);
@@ -52,11 +52,11 @@ export const searchFormSchema: FormSchema[] = [
     field: 'state',
     label: '状态',
     component: 'Select',
-    defaultValue: DeptState.ACTIVE,
+    defaultValue: State.ACTIVE,
     componentProps: {
       options: [
-        { label: '启用', value: DeptState.ACTIVE },
-        { label: '停用', value: DeptState.INACTIVE },
+        { label: '启用', value: State.ACTIVE },
+        { label: '停用', value: State.INACTIVE },
       ],
     },
     colProps: { span: 8 },
@@ -97,11 +97,11 @@ export const formSchema: FormSchema[] = [
     field: 'state',
     label: '状态',
     component: 'RadioButtonGroup',
-    defaultValue: DeptState.ACTIVE,
+    defaultValue: State.ACTIVE,
     componentProps: {
       options: [
-        { label: '启用', value: DeptState.ACTIVE },
-        { label: '停用', value: DeptState.INACTIVE },
+        { label: '启用', value: State.ACTIVE },
+        { label: '停用', value: State.INACTIVE },
       ],
     },
     required: true,

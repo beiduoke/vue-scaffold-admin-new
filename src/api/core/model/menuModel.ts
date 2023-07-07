@@ -1,49 +1,31 @@
 import type { RouteMeta } from 'vue-router';
-import { BasicFetchResult } from '.././model/baseModel';
-
-export enum MenuType {
-  UNSPECIFIED = 'MENU_TYPE_UNSPECIFIED',
-  CATALOGUE = 'MENU_TYPE_CATALOGUE',
-  MENU = 'MENU_TYPE_MENU',
-  ABILITY = 'MENU_TYPE_ABILITY',
-}
+import { BasicFetchResult, Enable, State } from '.././model/baseModel';
 
 export enum MenuState {
-  UNSPECIFIED = 'MENU_STATE_UNSPECIFIED',
-  ACTIVE = 'MENU_STATE_ACTIVE',
-  INACTIVE = 'MENU_STATE_INACTIVE',
-  BANNED = 'MENU_STATE_BANNED',
+  UNSPECIFIED,
+  ACTIVE,
+  INACTIVE,
+  BANNED,
 }
 
-export enum MenuHidden {
-  UNSPECIFIED = 'MENU_HIDDEN_UNSPECIFIED',
-  YES = 'MENU_HIDDEN_YES',
-  NO = 'MENU_HIDDEN_NO',
-}
-
-export enum MenuCache {
-  UNSPECIFIED = 'MENU_CACHE_UNSPECIFIED',
-  YES = 'MENU_CACHE_YES',
-  NO = 'MENU_CACHE_NO',
-}
-
-export enum MenuAffix {
-  UNSPECIFIED = 'MENU_Affix_UNSPECIFIED',
-  YES = 'MENU_AFFIX_YES',
-  NO = 'MENU_AFFIX_NO',
+export enum MenuType {
+  UNSPECIFIED,
+  CATALOGUE,
+  MENU,
+  ABILITY,
 }
 
 export enum MenuLinkType {
-  UNSPECIFIED = 'MENU_LINK_TYPE_UNSPECIFIED',
-  NO = 'MENU_LINK_TYPE_NO',
-  IFRAME = 'MENU_LINK_TYPE_IFRAME',
-  BLANK = 'MENU_LINK_TYPE_BLANK',
+  UNSPECIFIED,
+  NO,
+  IFRAME,
+  BLANK,
 }
 
 export enum MenuParameterType {
-  UNSPECIFIED = 'MENU_PARAMETER_TYPE_UNSPECIFIED',
-  PARAMS = 'MENU_PARAMETER_TYPE_PARAMS',
-  QUERY = 'MENU_PARAMETER_TYPE_QUERY',
+  UNSPECIFIED,
+  PARAMS,
+  QUERY,
 }
 
 export interface RouteItem {
@@ -66,7 +48,7 @@ export type getMenuListResultModel = RouteItem[];
 
 export type MenuParams = {
   name?: string;
-  state?: string;
+  state?: State;
 };
 
 export interface MenuListItem {
@@ -74,16 +56,16 @@ export interface MenuListItem {
   sort: string;
   parentId: string;
   createdAt: string;
-  state: MenuState;
+  state: State;
   icon: string;
   name: string;
   type: MenuType;
   permission: string;
   component: string;
   title: string;
-  isHidden: MenuHidden;
-  isAffix: MenuAffix;
-  isCache: MenuCache;
+  isHidden: Enable;
+  isAffix: Enable;
+  isCache: Enable;
   linkType: MenuLinkType;
   linkUrl: string;
   children: MenuListItem[];

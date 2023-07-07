@@ -1,5 +1,29 @@
 import { Result } from '/#/axios';
 
+export enum Enable {
+  UNSPECIFIED,
+  YES,
+  NO,
+}
+
+export enum Sort {
+  DESC,
+  ASC,
+}
+
+export enum State {
+  UNSPECIFIED,
+  ACTIVE,
+  INACTIVE,
+  BANNED,
+}
+
+export enum Switch {
+  UNSPECIFIED,
+  OPEN,
+  CLOSE,
+}
+
 export interface BasicPageParams {
   page?: number; // 页码
   pageSize?: number; // 每页数量
@@ -18,8 +42,3 @@ export interface BasicDataResult {
 }
 
 export interface BasicHandleResult<T = any> extends Result<T> {}
-
-export enum SortOrder {
-  ASCENDING = 'ascend',
-  DESCENDING = 'descend',
-}

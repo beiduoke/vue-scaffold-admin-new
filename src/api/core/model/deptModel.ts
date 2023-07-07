@@ -1,11 +1,4 @@
-import { BasicFetchResult, BasicPageParams } from '.././model/baseModel';
-
-export enum DeptState {
-  UNSPECIFIED = 'DEPT_STATE_UNSPECIFIED',
-  ACTIVE = 'DEPT_STATE_ACTIVE',
-  INACTIVE = 'DEPT_STATE_INACTIVE',
-  BANNED = 'DEPT_STATE_BANNED',
-}
+import { BasicFetchResult, BasicPageParams, State } from '.././model/baseModel';
 
 export type DeptParams = {
   name?: string;
@@ -17,7 +10,7 @@ export type DeptPageParams = BasicPageParams & DeptParams;
 export interface DeptListItem {
   id: string;
   name: string;
-  state: DeptState;
+  state: State;
   sort: string;
   createdAt: string;
   children: DeptListItem[];

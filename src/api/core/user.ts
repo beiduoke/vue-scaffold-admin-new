@@ -10,7 +10,7 @@ import {
 } from './model/userModel';
 
 import { ErrorMessageMode } from '/#/axios';
-import { BasicFetchResult, BasicPageParams, BasicHandleResult } from './model/baseModel';
+import { BasicFetchResult, BasicPageParams, BasicHandleResult, State } from './model/baseModel';
 import { MenuListItem, RouteItem } from './model/menuModel';
 
 const Api = {
@@ -120,8 +120,8 @@ export const updateUser = (id: string, params: UserParams) =>
  * @param params
  * @returns
  */
-export const setUserState = (id: string, params: UserParams) =>
-  defHttp.put<BasicHandleResult>({ url: Api.SetUserWithIdState(id), params: params });
+export const setUserState = (id: string, state: State) =>
+  defHttp.put<BasicHandleResult>({ url: Api.SetUserWithIdState(id), params: { state } });
 
 /**
  * 删除用户

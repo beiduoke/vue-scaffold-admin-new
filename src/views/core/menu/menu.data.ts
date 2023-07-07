@@ -5,14 +5,8 @@ import Icon from '@/components/Icon/Icon.vue';
 import { formatToDateTime } from '/@/utils/dateUtil';
 import { useDebounceFn } from '@vueuse/core';
 import pinyin from 'pinyin';
-import {
-  MenuAffix,
-  MenuLinkType,
-  MenuHidden,
-  MenuCache,
-  MenuParameterType,
-  MenuType,
-} from '/@/api/core/model/menuModel';
+import { MenuLinkType, MenuParameterType, MenuType } from '/@/api/core/model/menuModel';
+import { Enable } from '/@/api/core/model/baseModel';
 
 export const columns: BasicColumn[] = [
   {
@@ -77,8 +71,8 @@ export const columns: BasicColumn[] = [
     dataIndex: 'isHidden',
     width: 80,
     customRender: ({ record }) => {
-      const status = record.isHidden as string;
-      const enable = status === MenuHidden.NO.toString();
+      const status = record.isHidden as Enable;
+      const enable = status === Enable.NO;
       const color = enable ? 'green' : 'red';
       const text = enable ? '显示' : '隐藏';
       return h(Tag, { color: color }, () => text);
@@ -97,9 +91,9 @@ export const columns: BasicColumn[] = [
   },
 ];
 
-const isDir = (type: string | keyof MenuType) => type === MenuType.CATALOGUE;
-const isMenu = (type: string | keyof MenuType) => type === MenuType.MENU;
-const isAbility = (type: string | keyof MenuType) => type === MenuType.ABILITY;
+const isDir = (type: MenuType) => type === MenuType.CATALOGUE;
+const isMenu = (type: MenuType) => type === MenuType.MENU;
+const isAbility = (type: MenuType) => type === MenuType.ABILITY;
 
 export const searchFormSchema: FormSchema[] = [
   {
@@ -261,11 +255,11 @@ export const formSchema: FormSchema[] = [
     field: 'isHidden',
     label: '是否隐藏',
     component: 'RadioButtonGroup',
-    defaultValue: MenuHidden.NO,
+    defaultValue: Enable.NO,
     componentProps: {
       options: [
-        { label: '是', value: MenuHidden.YES },
-        { label: '否', value: MenuHidden.NO },
+        { label: '是', value: Enable.YES },
+        { label: '否', value: Enable.NO },
       ],
     },
     colProps: { lg: 12, md: 12 },
@@ -317,11 +311,11 @@ export const formSchema: FormSchema[] = [
     field: 'isCache',
     label: '是否缓存',
     component: 'RadioButtonGroup',
-    defaultValue: MenuCache.NO,
+    defaultValue: Enable.NO,
     componentProps: {
       options: [
-        { label: '否', value: MenuCache.NO },
-        { label: '是', value: MenuCache.YES },
+        { label: '否', value: Enable.NO },
+        { label: '是', value: Enable.YES },
       ],
     },
     ifShow: ({ values }) => isMenu(values.type),
@@ -331,11 +325,11 @@ export const formSchema: FormSchema[] = [
     field: 'isAffix',
     label: '是否固定',
     component: 'RadioButtonGroup',
-    defaultValue: MenuAffix.NO,
+    defaultValue: Enable.NO,
     componentProps: {
       options: [
-        { label: '否', value: MenuAffix.NO },
-        { label: '是', value: MenuAffix.YES },
+        { label: '否', value: Enable.NO },
+        { label: '是', value: Enable.YES },
       ],
     },
     ifShow: ({ values }) => isMenu(values.type),

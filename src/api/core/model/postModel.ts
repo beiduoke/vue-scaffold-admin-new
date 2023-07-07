@@ -1,15 +1,8 @@
-import { BasicFetchResult } from '.././model/baseModel';
-
-export enum PostState {
-  UNSPECIFIED = 'POST_STATE_UNSPECIFIED',
-  ACTIVE = 'POST_STATE_ACTIVE',
-  INACTIVE = 'POST_STATE_INACTIVE',
-  BANNED = 'POST_STATE_BANNED',
-}
+import { BasicFetchResult, State } from '.././model/baseModel';
 
 export type PostParams = {
   name?: string;
-  state?: string;
+  state?: State;
 };
 export interface PostListItem {
   id: string;
@@ -18,7 +11,7 @@ export interface PostListItem {
   code: string;
   createdAt: string;
   remark: string;
-  state: string;
+  state: State;
 }
 
 export type PostListGetResultModel = BasicFetchResult<PostListItem>;

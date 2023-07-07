@@ -6,7 +6,7 @@ import {
 } from './model/domainModel';
 import { defHttp } from '/@/utils/http/core';
 
-import { BasicHandleResult } from './model/baseModel';
+import { BasicHandleResult, State } from './model/baseModel';
 
 const Api = {
   /** 租户管理 */
@@ -104,7 +104,7 @@ export const deleteDomain = (id: string) =>
  * @param params
  * @returns
  */
-export const setDomainState = (id: string, state: DomainState) =>
+export const setDomainState = (id: string, state: State) =>
   defHttp.put<BasicHandleResult>({ url: Api.SetDomainWithIdState(id), params: { state } });
 
 /**

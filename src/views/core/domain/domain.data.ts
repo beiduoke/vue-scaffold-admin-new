@@ -4,8 +4,8 @@ import { h } from 'vue';
 import { Switch } from 'ant-design-vue';
 import { setDomainState } from '/@/api/core/domain';
 import { useMessage } from '/@/hooks/web/useMessage';
-import { DomainState } from '/@/api/core/model/domainModel';
 import { formatToDateTime } from '/@/utils/dateUtil';
+import { State } from '/@/api/core/model/baseModel';
 
 export const columns: BasicColumn[] = [
   {
@@ -28,13 +28,13 @@ export const columns: BasicColumn[] = [
       }
       return h(Switch, {
         disabled: false,
-        checked: record.state === DomainState.ACTIVE,
+        checked: record.state === State.ACTIVE,
         checkedChildren: '已启用',
         unCheckedChildren: '已禁用',
         loading: record.pendingStatus,
         onChange(checked: boolean) {
           record.pendingStatus = true;
-          const newStatus = checked ? DomainState.ACTIVE : DomainState.INACTIVE;
+          const newStatus = checked ? State.ACTIVE : State.INACTIVE;
           const { createMessage } = useMessage();
           setDomainState(record.id, newStatus)
             .then(() => {
@@ -76,8 +76,8 @@ export const searchFormSchema: FormSchema[] = [
     component: 'Select',
     componentProps: {
       options: [
-        { label: '启用', value: DomainState.ACTIVE },
-        { label: '停用', value: DomainState.INACTIVE },
+        { label: '启用', value: State.ACTIVE },
+        { label: '停用', value: State.INACTIVE },
       ],
     },
     colProps: { span: 8 },
@@ -110,11 +110,11 @@ export const formSchema: FormSchema[] = [
     field: 'state',
     label: '状态',
     component: 'RadioButtonGroup',
-    defaultValue: DomainState.ACTIVE,
+    defaultValue: State.ACTIVE,
     componentProps: {
       options: [
-        { label: '启用', value: DomainState.ACTIVE },
-        { label: '停用', value: DomainState.INACTIVE },
+        { label: '启用', value: State.ACTIVE },
+        { label: '停用', value: State.INACTIVE },
       ],
     },
   },

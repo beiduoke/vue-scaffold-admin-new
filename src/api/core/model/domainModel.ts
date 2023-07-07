@@ -1,16 +1,17 @@
-import { BasicFetchResult } from '/@/api/model/baseModel';
+import { BasicFetchResult, State } from './baseModel';
 
 export enum DomainState {
-  UNSPECIFIED = 'DOMAIN_STATE_UNSPECIFIED',
-  ACTIVE = 'DOMAIN_STATE_ACTIVE',
-  INACTIVE = 'DOMAIN_STATE_INACTIVE',
-  BANNED = 'DOMAIN_STATE_BANNED',
+  UNSPECIFIED,
+  ACTIVE,
+  INACTIVE,
+  BANNED,
 }
 
 export type DomainParams = {
   name?: string;
-  state?: string;
+  state?: State;
 };
+
 export interface DomainListItem {
   id: string;
   name: string;
@@ -19,7 +20,7 @@ export interface DomainListItem {
   parentId: string;
   createdAt: string;
   remark: string;
-  state: string;
+  state: State;
   children: DomainListItem[];
 }
 

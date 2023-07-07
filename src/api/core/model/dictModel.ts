@@ -1,14 +1,8 @@
-import { BasicFetchResult, BasicPageParams } from './baseModel';
+import { BasicFetchResult, BasicPageParams, State } from './baseModel';
 
-export enum DictState {
-  UNSPECIFIED = 'DICT_STATE_UNSPECIFIED',
-  ACTIVE = 'DICT_STATE_ACTIVE',
-  INACTIVE = 'DICT_STATE_INACTIVE',
-  BANNED = 'DICT_STATE_BANNED',
-}
 export type DictParams = {
   name?: string;
-  state?: string;
+  state?: State;
 };
 
 export type DictPageParams = BasicPageParams & DictParams;
@@ -18,7 +12,7 @@ export interface DictListItem {
   name: string;
   type: string;
   sort: number;
-  state: string;
+  state: State;
   remarks: string;
   createdAt: string;
   updatedAt: string;
@@ -26,12 +20,6 @@ export interface DictListItem {
 
 export type DictListGetResultModel = BasicFetchResult<DictListItem>;
 
-export enum DictDataState {
-  UNSPECIFIED = 'DICT_DATA_STATE_UNSPECIFIED',
-  ACTIVE = 'DICT_DATA_STATE_ACTIVE',
-  INACTIVE = 'DICT_DATA_STATE_INACTIVE',
-  BANNED = 'DICT_DATA_STATE_BANNED',
-}
 export type DictDataParams = {
   label?: string;
   state?: string;
@@ -47,7 +35,7 @@ export interface DictDataListItem {
   css_class: string;
   dict_type: string;
   sort: number;
-  state: string;
+  state: State;
   remarks: string;
   createdAt: string;
   updatedAt: string;

@@ -7,7 +7,7 @@ import {
 } from './model/roleModel';
 import { defHttp } from '/@/utils/http/core';
 
-import { BasicHandleResult } from './model/baseModel';
+import { BasicHandleResult, State } from './model/baseModel';
 import { MenuListGetResultModel } from './model/menuModel';
 
 const Api = {
@@ -69,7 +69,7 @@ export const deleteRole = (id: string) =>
  * @param state
  * @returns
  */
-export const setRoleState = (id: string, state: string) =>
+export const setRoleState = (id: string, state: State) =>
   defHttp.put<BasicHandleResult>({ url: Api.SetRoleWithIdState(id), params: { state } });
 
 /**

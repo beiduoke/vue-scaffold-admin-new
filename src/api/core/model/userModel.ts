@@ -1,16 +1,9 @@
-import { BasicFetchResult, BasicPageParams } from '.././model/baseModel';
-
-export enum UserState {
-  UNSPECIFIED = 'USER_STATE_UNSPECIFIED',
-  ACTIVE = 'USER_STATE_ACTIVE',
-  INACTIVE = 'USER_STATE_INACTIVE',
-  BANNED = 'USER_STATE_BANNED',
-}
+import { BasicFetchResult, BasicPageParams, State } from '.././model/baseModel';
 
 export enum UserGender {
-  UNSPECIFIED = 'USER_GENDER_UNSPECIFIED',
-  MAN = 'USER_GENDER_MAN',
-  WOMAN = 'USER_GENDER_WOMAN',
+  UNSPECIFIED,
+  MAN,
+  WOMAN,
 }
 
 /**
@@ -77,8 +70,8 @@ export interface UserModel {
   birthday: string;
   createdAt: string;
   email: string;
-  gender: string;
-  state: string;
+  gender: UserGender;
+  state: State;
   updatedAt: string;
 }
 
@@ -93,7 +86,7 @@ export interface RoleModel {
   name: string;
   parentId: number | string;
   sort: number | string;
-  state: string;
+  state: State;
 }
 
 /**
@@ -107,6 +100,7 @@ export interface GetUserRolesModel {
 export type UserParams = BasicPageParams & {
   name?: string;
   nickname?: string;
+  state?: State;
 };
 
 export interface UserListItem {
@@ -118,7 +112,7 @@ export interface UserListItem {
   postIds: number[];
   createTime: string;
   remark: string;
-  state: number;
+  state: State;
   deptId: number;
 }
 

@@ -1,7 +1,7 @@
 import { Avatar, Tag } from 'ant-design-vue/lib/components';
 import { h } from 'vue';
 import { isUserExist } from '../../../api/core/user';
-import { UserGender, UserState } from '/@/api/core/model/userModel';
+import { UserGender } from '/@/api/core/model/userModel';
 
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
@@ -10,6 +10,7 @@ import { getAllPostList } from '/@/api/core/post';
 
 import { RoleListItem } from '/@/api/core/model/roleModel';
 import { DeptListItem } from '/@/api/core/model/deptModel';
+import { State } from '/@/api/core/model/baseModel';
 
 export const columns: BasicColumn[] = [
   {
@@ -94,7 +95,7 @@ export const columns: BasicColumn[] = [
     width: 80,
     customRender: ({ record }) => {
       const state = record.state;
-      const enable = state === UserState.ACTIVE;
+      const enable = state === State.ACTIVE;
       const color = enable ? 'green' : 'red';
       const text = enable ? '启用' : '停用';
       return h(Tag, { color: color }, () => text);
@@ -256,11 +257,11 @@ export const userFormSchema: FormSchema[] = [
     field: 'state',
     label: '状态',
     component: 'RadioButtonGroup',
-    defaultValue: UserState.ACTIVE,
+    defaultValue: State.ACTIVE,
     componentProps: {
       options: [
-        { label: '启用', value: UserState.ACTIVE },
-        { label: '停用', value: UserState.INACTIVE },
+        { label: '启用', value: State.ACTIVE },
+        { label: '停用', value: State.INACTIVE },
       ],
     },
     required: true,

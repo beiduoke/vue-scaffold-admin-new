@@ -1,24 +1,17 @@
-import { BasicFetchResult, BasicPageParams } from '.././model/baseModel';
-
-export enum RoleState {
-  UNSPECIFIED = 'ROLE_STATE_UNSPECIFIED',
-  ACTIVE = 'ROLE_STATE_ACTIVE',
-  INACTIVE = 'ROLE_STATE_INACTIVE',
-  BANNED = 'ROLE_STATE_BANNED',
-}
+import { BasicFetchResult, BasicPageParams, State } from '.././model/baseModel';
 
 export enum RoleScope {
-  UNSPECIFIED = 'ROLE_SCOPE_UNSPECIFIED',
-  ALL = 'ROLE_DATA_SCOPE_ALL',
-  SELF = 'ROLE_DATA_SCOPE_SELF',
-  DEPT = 'ROLE_DATA_SCOPE_DEPT',
-  DEPT_FOLLOW = 'ROLE_DATA_SCOPE_DEPT_FOLLOW',
-  DEPT_CUSTOM = 'ROLE_DATA_SCOPE_DEPT_CUSTOM',
+  UNSPECIFIED,
+  ALL,
+  SELF,
+  DEPT,
+  DEPT_FOLLOW,
+  DEPT_CUSTOM,
 }
 
 export type RoleParams = {
   name?: string;
-  state?: string;
+  state?: State;
 };
 
 export type RolePageParams = BasicPageParams & RoleParams;
@@ -26,7 +19,7 @@ export type RolePageParams = BasicPageParams & RoleParams;
 export interface RoleListItem {
   id: string;
   name: string;
-  state: RoleState;
+  state: State;
   sort: string;
   dataScope: RoleScope | string;
   createdAt: string;

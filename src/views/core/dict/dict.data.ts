@@ -5,7 +5,7 @@ import { Switch } from 'ant-design-vue';
 import { setDictState } from '/@/api/core/dict';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { formatToDateTime } from '/@/utils/dateUtil';
-import { DictState } from '/@/api/core/model/dictModel';
+import { State } from '/@/api/core/model/baseModel';
 
 export const columns: BasicColumn[] = [
   {
@@ -28,13 +28,13 @@ export const columns: BasicColumn[] = [
       }
       return h(Switch, {
         disabled: false,
-        checked: record.state === DictState.ACTIVE,
+        checked: record.state === State.ACTIVE,
         checkedChildren: '已启用',
         unCheckedChildren: '已禁用',
         loading: record.pendingStatus,
         onChange(checked: boolean) {
           record.pendingStatus = true;
-          const newStatus = checked ? DictState.ACTIVE : DictState.INACTIVE;
+          const newStatus = checked ? State.ACTIVE : State.INACTIVE;
           const { createMessage } = useMessage();
           setDictState(record.id, newStatus)
             .then(() => {
@@ -81,8 +81,8 @@ export const searchFormSchema: FormSchema[] = [
     component: 'Select',
     componentProps: {
       options: [
-        { label: '启用', value: DictState.ACTIVE },
-        { label: '停用', value: DictState.INACTIVE },
+        { label: '启用', value: State.ACTIVE },
+        { label: '停用', value: State.INACTIVE },
       ],
     },
     colProps: { span: 8 },
@@ -112,11 +112,11 @@ export const formSchema: FormSchema[] = [
     field: 'state',
     label: '字典状态',
     component: 'RadioButtonGroup',
-    defaultValue: DictState.ACTIVE,
+    defaultValue: State.ACTIVE,
     componentProps: {
       options: [
-        { label: '启用', value: DictState.ACTIVE },
-        { label: '停用', value: DictState.INACTIVE },
+        { label: '启用', value: State.ACTIVE },
+        { label: '停用', value: State.INACTIVE },
       ],
     },
   },
