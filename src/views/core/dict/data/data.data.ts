@@ -5,7 +5,7 @@ import { Switch } from 'ant-design-vue';
 import { getAllDictList, setDictDataState } from '/@/api/core/dict';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { formatToDateTime } from '/@/utils/dateUtil';
-import { DictDataState } from '/@/api/core/model/dictModel';
+import { State } from '/@/api/core/model/baseModel';
 
 export const columns: BasicColumn[] = [
   {
@@ -28,21 +28,21 @@ export const columns: BasicColumn[] = [
       }
       return h(Switch, {
         disabled: false,
-        checked: record.state === DictDataState.ACTIVE,
+        checked: record.state === State.ACTIVE,
         checkedChildren: '已启用',
         unCheckedChildren: '已禁用',
         loading: record.pendingStatus,
         onChange(checked: boolean) {
           record.pendingStatus = true;
-          const newStatus = checked ? DictDataState.ACTIVE : DictDataState.INACTIVE;
+          const newStatus = checked ? State.ACTIVE : State.INACTIVE;
           const { createMessage } = useMessage();
           setDictDataState(record.id, newStatus)
             .then(() => {
               record.state = newStatus;
-              createMessage.success(`已成功修改字典状态`);
+              createMessage.success(`字典数据状态修改成功`);
             })
             .catch(() => {
-              createMessage.error('修改字典状态失败');
+              createMessage.error('字典数据状态修改失败');
             })
             .finally(() => {
               record.pendingStatus = false;
@@ -92,8 +92,8 @@ export const searchFormSchema: FormSchema[] = [
     component: 'Select',
     componentProps: {
       options: [
-        { label: '启用', value: DictDataState.ACTIVE },
-        { label: '停用', value: DictDataState.INACTIVE },
+        { label: '启用', value: State.ACTIVE },
+        { label: '停用', value: State.INACTIVE },
       ],
     },
     colProps: { span: 8 },
@@ -144,11 +144,11 @@ export const formSchema: FormSchema[] = [
     field: 'state',
     label: '字典状态',
     component: 'RadioButtonGroup',
-    defaultValue: DictDataState.ACTIVE,
+    defaultValue: State.ACTIVE,
     componentProps: {
       options: [
-        { label: '启用', value: DictDataState.ACTIVE },
-        { label: '停用', value: DictDataState.INACTIVE },
+        { label: '启用', value: State.ACTIVE },
+        { label: '停用', value: State.INACTIVE },
       ],
     },
   },

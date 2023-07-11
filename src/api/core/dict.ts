@@ -117,7 +117,7 @@ export const createDictData = (params: DictDataParams) =>
  * @param state
  * @returns
  */
-export const setDictDataState = (id: string, state: string) =>
+export const setDictDataState = (id: string, state: State) =>
   defHttp.put<BasicHandleResult>({
     url: Api.SetDictDataWithIdState(id),
     params: { state },

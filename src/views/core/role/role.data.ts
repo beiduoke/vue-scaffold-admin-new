@@ -40,10 +40,10 @@ export const columns: BasicColumn[] = [
           setRoleState(record.id, newStatus)
             .then(() => {
               record.state = newStatus;
-              createMessage.success(`已成功修改角色状态`);
+              createMessage.success(`角色状态修改成功`);
             })
             .catch(() => {
-              createMessage.error('修改角色状态失败');
+              createMessage.error('角色状态修改失败');
             })
             .finally(() => {
               record.pendingStatus = false;

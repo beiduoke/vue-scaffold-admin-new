@@ -39,10 +39,10 @@ export const columns: BasicColumn[] = [
           setDictState(record.id, newStatus)
             .then(() => {
               record.state = newStatus;
-              createMessage.success(`已成功修改字典状态`);
+              createMessage.success(`字典状态修改成功`);
             })
             .catch(() => {
-              createMessage.error('修改字典状态失败');
+              createMessage.error('字典状态修改失败');
             })
             .finally(() => {
               record.pendingStatus = false;

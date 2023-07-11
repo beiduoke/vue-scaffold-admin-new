@@ -11,7 +11,7 @@ export const columns: BasicColumn[] = [
   {
     title: '租户名称',
     dataIndex: 'name',
-    width: 200,
+    width: 400,
   },
   {
     title: '排序',
@@ -39,10 +39,10 @@ export const columns: BasicColumn[] = [
           setDomainState(record.id, newStatus)
             .then(() => {
               record.state = newStatus;
-              createMessage.success(`已成功修改租户状态`);
+              createMessage.success(`租户状态修改成功`);
             })
             .catch(() => {
-              createMessage.error('修改租户状态失败');
+              createMessage.error('租户状态修改失败');
             })
             .finally(() => {
               record.pendingStatus = false;

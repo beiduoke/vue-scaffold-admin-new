@@ -104,12 +104,12 @@ export const searchFormSchema: FormSchema[] = [
   },
   {
     field: 'isHidden',
-    label: '状态',
+    label: '是否显示',
     component: 'Select',
     componentProps: {
       options: [
-        { label: '启用', value: MenuHidden.NO },
-        { label: '停用', value: MenuHidden.YES },
+        { label: '显示', value: Enable.YES },
+        { label: '隐藏', value: Enable.NO },
       ],
     },
     colProps: { span: 8 },

@@ -39,10 +39,10 @@ export const columns: BasicColumn[] = [
           setPostState(record.id, newStatus)
             .then(() => {
               record.state = newStatus;
-              createMessage.success(`已成功修改岗位状态`);
+              createMessage.success(`岗位状态修改成功`);
             })
             .catch(() => {
-              createMessage.error('修改岗位状态失败');
+              createMessage.error('岗位状态修改失败');
             })
             .finally(() => {
               record.pendingStatus = false;
