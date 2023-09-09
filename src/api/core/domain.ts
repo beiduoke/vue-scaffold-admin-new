@@ -2,7 +2,9 @@ import {
   DomainParams,
   DomainListGetResultModel,
   DomainListItem,
-  DomainState,
+  PackageParams,
+  PackageListItem,
+  PackageListGetResultModel,
 } from './model/domainModel';
 import { defHttp } from '/@/utils/http/core';
 
@@ -17,6 +19,14 @@ const Api = {
   DomainWithCode: (code) => `/domains/${code}/code`,
   DomainWithName: (name) => `/domains/${name}/name`,
   DomainWithIdMenu: (id) => `/domains/${id}/menus`,
+  // 租户套餐
+  Package: '/domainPackages',
+  SetPackageWithIdState: (id) => `/domainPackages/${id}/state`,
+  PackageWithPidListTree: (pid) => `/domainPackages/${pid}/trees`,
+  PackageWithId: (id) => `/domainPackages/${id}`,
+  PackageWithCode: (code) => `/domainPackages/${code}/code`,
+  PackageWithName: (name) => `/domainPackages/${name}/name`,
+  PackageWithIdMenu: (id) => `/domainPackages/${id}/menus`,
 };
 
 /**
@@ -99,7 +109,7 @@ export const deleteDomain = (id: string) =>
   defHttp.delete<BasicHandleResult>({ url: Api.DomainWithId(id) });
 
 /**
- * 修改租户
+ * 修改租户状态
  * @param id
  * @param params
  * @returns
@@ -123,3 +133,58 @@ export const getDomainMenuList = (id: string, params: any = {}) =>
  */
 export const handleDomainMenu = (id: string, params: any) =>
   defHttp.post<BasicHandleResult>({ url: Api.DomainWithIdMenu(id), params: params });
+
+/**
+ * 获取租户套餐列表
+ * @param params
+ * @param id
+ * @returns
+ */
+export const getPackageListByPage = (params?: PackageParams) =>
+  defHttp.get<PackageListGetResultModel>({ url: Api.Package, params }).then((data) => {
+    data.total = Number(data.total);
+    return data;
+  });
+
+/**
+ * 创建租户套餐
+ * @param params
+ * @returns
+ */
+export const createPackage = (params: PackageParams) =>
+  defHttp.post<BasicHandleResult>({ url: Api.Package, params });
+
+/**
+ * 获取指定租户套餐
+ * @param params
+ * @returns
+ */
+export const getPackageById = (id: string) =>
+  // 添加http选项 在租户套餐管理返回接口中有code 字段会造成拦截器误判
+  defHttp.get<PackageListItem>({ url: Api.PackageWithId(id) }, { isTransformResponse: false });
+
+/**
+ * 修改租户套餐
+ * @param id
+ * @param params
+ * @returns
+ */
+export const updatePackage = (id: string, params: PackageParams) =>
+  defHttp.put<BasicHandleResult>({ url: Api.PackageWithId(id), params });
+
+/**
+ * 删除租户套餐
+ * @param id
+ * @returns
+ */
+export const deletePackage = (id: string) =>
+  defHttp.delete<BasicHandleResult>({ url: Api.PackageWithId(id) });
+
+/**
+ * 修改租户套餐状态
+ * @param id
+ * @param params
+ * @returns
+ */
+export const setPackageState = (id: string, state: State) =>
+  defHttp.put<BasicHandleResult>({ url: Api.SetPackageWithIdState(id), params: { state } });

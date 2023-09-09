@@ -115,7 +115,7 @@
 
 
       async function dumpData(record: Recordable) {
-        go(`/middle/dict/data/${record.type}`);
+        go(`/middle/dict/data/${record.type}?dict_name=${record.name}`);
       }
       return {
         registerTable,

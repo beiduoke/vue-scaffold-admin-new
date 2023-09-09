@@ -2,8 +2,7 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="dashed" @click="goBack"> 返回字典列表 </a-button>
-        <a-button type="primary" @click="handleCreate"> 新增字典数据 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新增套餐 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
@@ -11,7 +10,6 @@
             :actions="[
               {
                 icon: 'clarity:note-edit-line',
-                label: '修改',
                 onClick: handleEdit.bind(null, record),
               },
               {
@@ -28,69 +26,46 @@
         </template>
       </template>
     </BasicTable>
-    <DictDrawer @register="registerDrawer" @success="handleSuccess" />
+    <PostDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { defineComponent } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { deleteDictData, getDictDataListByPage } from '/@/api/core/dict';
-  import { usePermission } from '/@/hooks/web/usePermission';
+  import { deletePost, getPostListByPage } from '/@/api/core/domain';
 
   import { useDrawer } from '/@/components/Drawer';
-  import DictDrawer from './DataDrawer.vue';
+  import PostDrawer from './PackageDrawer.vue';
 
-  import { columns, searchFormSchema } from './data.data';
+  import { columns, searchFormSchema } from './package.data';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { useGo } from '/@/hooks/web/usePage';
-  import { useRoute } from 'vue-router';
-  import { useTabs } from '/@/hooks/web/useTabs';
   const { createMessage } = useMessage();
   export default defineComponent({
-    name: 'DictDataManagement',
-    components: { BasicTable, DictDrawer, TableAction },
+    name: 'PostManagement',
+    components: { BasicTable, PostDrawer, TableAction },
     setup() {
-      const go = useGo();
-      const { setTitle } = useTabs();
-      const route = useRoute();
-      const routeParams = ref({})
-      const dictType = ref(route.params?.dict_type) 
-      if (dictType.value) {
-        routeParams.value = {dictType: dictType.value}
-      }
-      const dictName = ref(route.query?.dict_name)
-      // 设置Tab的标题（不会影响页面标题）
-      setTitle(`字典'${dictName.value}'列表`);
-      
-      const { hasPermission } = usePermission();
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const [registerTable, { reload,updateTableDataRecord, setLoading }] = useTable({
-        title: '字典数据列表',
-        api: getDictDataListByPage,
+      const [registerTable, { reload, setLoading }] = useTable({
+        title: '套餐列表',
+        api: getPostListByPage,
         columns,
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema,
-          mergeDynamicData: routeParams.value
         },
-        searchInfo: routeParams.value,
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
         showIndexColumn: false,
         actionColumn: {
-          width: 300,
+          width: 80,
           title: '操作',
           dataIndex: 'action',
           // slots: { customRender: 'action' },
           fixed: undefined,
         },
       });
-
-      function goBack() {
-        go("/middle/dict")
-      }
 
       function handleCreate() {
         openDrawer(true, {
@@ -109,7 +84,7 @@
         try {
           setLoading(true);
           const id = record.id;
-          const result = await deleteDictData(id);
+          const result = await deletePost(id);
           if (result.code) {
             createMessage.error(result.message);
             return;
@@ -120,25 +95,17 @@
         }
       }
 
-      function handleSuccess({ isUpdate, values }) {
-        if (isUpdate) {
-          // 演示不刷新表格直接更新内部数据。
-          // 注意：updateTableDataRecord要求表格的rowKey属性为string并且存在于每一行的record的keys中
-          updateTableDataRecord(values.id, values);
-        } else {
-          reload();
-        }
+      function handleSuccess() {
+        reload();
       }
 
       return {
-        goBack,
         registerTable,
         registerDrawer,
         handleCreate,
         handleEdit,
         handleDelete,
         handleSuccess,
-        hasPermission,
       };
     },
   });
