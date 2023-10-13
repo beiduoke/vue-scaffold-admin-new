@@ -26,29 +26,30 @@
         </template>
       </template>
     </BasicTable>
-    <PostDrawer @register="registerDrawer" @success="handleSuccess" />
+    <PackageDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { deletePost, getPostListByPage } from '/@/api/core/domain';
+  import { deletePackage, getPackageListByPage } from '/@/api/core/domain';
 
   import { useDrawer } from '/@/components/Drawer';
-  import PostDrawer from './PackageDrawer.vue';
+  import PackageDrawer from './PackageDrawer.vue';
 
   import { columns, searchFormSchema } from './package.data';
   import { useMessage } from '/@/hooks/web/useMessage';
+
   const { createMessage } = useMessage();
   export default defineComponent({
-    name: 'PostManagement',
-    components: { BasicTable, PostDrawer, TableAction },
+    name: 'PackageManagement',
+    components: { BasicTable, PackageDrawer, TableAction },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload, setLoading }] = useTable({
         title: '套餐列表',
-        api: getPostListByPage,
+        api: getPackageListByPage,
         columns,
         formConfig: {
           labelWidth: 120,
@@ -84,7 +85,7 @@
         try {
           setLoading(true);
           const id = record.id;
-          const result = await deletePost(id);
+          const result = await deletePackage(id);
           if (result.code) {
             createMessage.error(result.message);
             return;

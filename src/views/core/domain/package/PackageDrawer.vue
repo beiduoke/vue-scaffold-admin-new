@@ -16,19 +16,20 @@
   import { formSchema } from './package.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
-  import { createPost, updatePost } from '/@/api/core/package';
-  import { PostListItem } from '/@/api/core/model/packageModel';
+  import { createPackage, updatePackage } from '/@/api/core/domain';
+  import { PackageListItem } from '/@/api/core/model/domainModel';
   import { BasicHandleResult, BasicDataResult } from '/@/api/core/model/baseModel';
   import { useMessage } from '/@/hooks/web/useMessage';
+
   const { createMessage } = useMessage();
 
   export default defineComponent({
-    name: 'PostDrawer',
+    name: 'PackageDrawer',
     components: { BasicDrawer, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
-      const record = ref<PostListItem>();
+      const record = ref<PackageListItem>();
 
       const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
         labelWidth: 90,
@@ -60,9 +61,9 @@
           const id = (unref(record)?.id as string) ?? '';
           let result: BasicHandleResult<BasicDataResult>;
           if (id != '') {
-            result = await updatePost(id, values);
+            result = await updatePackage(id, values);
           } else {
-            result = await createPost(values);
+            result = await createPackage(values);
           }
           if (result.code) {
             createMessage.error(result.message);

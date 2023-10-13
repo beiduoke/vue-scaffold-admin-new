@@ -34,6 +34,8 @@
   import { getBasicColumns, getBasicShortColumns } from './tableData';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { demoListApi } from '/@/api/demo/table';
+  import { type Nullable } from '@vben/types';
+
   export default defineComponent({
     components: { BasicTable },
     setup() {
@@ -54,10 +56,22 @@
         }, 1000);
       }
       function changeColumns() {
-        getTableAction().setColumns(getBasicShortColumns());
+        getTableAction().setProps({
+          columns: getBasicShortColumns(),
+          rowSelection: {
+            type: 'checkbox',
+          },
+          showIndexColumn: true,
+        });
       }
       function reloadTable() {
-        getTableAction().setColumns(getBasicColumns());
+        getTableAction().setProps({
+          columns: getBasicColumns(),
+          rowSelection: {
+            type: 'checkbox',
+          },
+          showIndexColumn: true,
+        });
 
         getTableAction().reload({
           page: 1,

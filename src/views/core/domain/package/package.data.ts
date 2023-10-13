@@ -1,8 +1,7 @@
-import { BasicColumn } from '/@/components/Table';
-import { FormSchema } from '/@/components/Table';
+import { BasicColumn, FormSchema } from '/@/components/Table';
 import { h } from 'vue';
 import { Switch } from 'ant-design-vue';
-import { setPostState } from '/@/api/core/domain';
+import { setPackageState } from '/@/api/core/domain';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { formatToDateTime } from '/@/utils/dateUtil';
 import { State } from '/@/api/core/model/baseModel';
@@ -36,7 +35,7 @@ export const columns: BasicColumn[] = [
           record.pendingStatus = true;
           const newStatus = checked ? State.ACTIVE : State.INACTIVE;
           const { createMessage } = useMessage();
-          setPostState(record.id, newStatus)
+          setPackageState(record.id, newStatus)
             .then(() => {
               record.state = newStatus;
               createMessage.success(`套餐状态修改成功`);
