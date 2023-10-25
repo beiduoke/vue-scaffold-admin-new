@@ -31,10 +31,10 @@
 
   import { createMenu, getMenuById, getMenuListTree, updateMenu } from '/@/api/core/menu';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { MenuListItem } from '/@/api/core/model/menuModel';
+  import { MenuListItem, MenuType } from '/@/api/core/model/menuModel';
   import { BasicHandleResult } from '/@/api/core/model/baseModel';
   import MenuParamsTable from './MenuParamsTable.vue';
-  import { MenuType } from '/@/api/core/model/menuModel';
+
   const { createMessage } = useMessage();
 
   export default defineComponent({
@@ -95,7 +95,7 @@
         await changeFieldValue('type', unref(menuType));
 
         // 设置父级菜单
-        if (!!data.parentId) {
+        if (data.parentId) {
           setFieldsValue({ parentId: data.parentId });
         }
 
@@ -155,6 +155,7 @@
               break;
             case MenuType.CATALOGUE:
               values.component = 'LAYOUT';
+              delete values.apiResource;
               break;
           }
 

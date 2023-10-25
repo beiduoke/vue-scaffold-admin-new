@@ -46,6 +46,7 @@
 
   import { columns, searchFormSchema } from './dict.data';
   import { useMessage } from '/@/hooks/web/useMessage';
+
   const { createMessage } = useMessage();
   export default defineComponent({
     name: 'DictManagement',
@@ -54,7 +55,7 @@
       const go = useGo();
       const { hasPermission } = usePermission();
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const [registerTable, { reload,updateTableDataRecord, setLoading }] = useTable({
+      const [registerTable, { reload, updateTableDataRecord, setLoading }] = useTable({
         title: '字典列表',
         api: getDictListByPage,
         columns,
@@ -112,7 +113,6 @@
           reload();
         }
       }
-
 
       async function dumpData(record: Recordable) {
         go(`/middle/dict/data/${record.type}?dict_name=${record.name}`);

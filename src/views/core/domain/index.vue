@@ -3,6 +3,7 @@
     <BasicTable @register="registerTable" @fetch-success="onFetchSuccess">
       <template #toolbar>
         <a-button type="primary" @click="handleCreate"> 新增租户 </a-button>
+        <a-button type="primary" @click="packageManagement"> 套餐管理 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action' && record.id > 0">
@@ -50,11 +51,14 @@
 
   import { columns, searchFormSchema } from './domain.data';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { useGo } from '/@/hooks/web/usePage';
+
   const { createMessage } = useMessage();
   export default defineComponent({
     name: 'DomainManagement',
     components: { BasicTable, DomainDrawer, TableAction, DomainMenuModal },
     setup() {
+      const go = useGo();
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerMenuModal, { openModal: openMenuModal }] = useModal();
       const [registerTable, { reload, expandAll, setLoading }] = useTable({
@@ -118,6 +122,10 @@
         reload();
       }
 
+      function packageManagement() {
+        go({ name: 'DomainPackageManagement' });
+      }
+
       function onFetchSuccess() {
         // 演示默认展开所有表项
         nextTick(expandAll);
@@ -132,6 +140,7 @@
         handleSuccess,
         onFetchSuccess,
         registerMenuModal,
+        packageManagement,
       };
     },
   });
