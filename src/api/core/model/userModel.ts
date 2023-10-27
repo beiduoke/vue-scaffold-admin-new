@@ -35,7 +35,7 @@ export interface LoginResultModel {
  * 这里作为系统特殊处理字段需按以下要求
  * @description: Get user information return value
  */
-export interface GetUserInfoModel {
+export interface GetAccessInfoModel {
   roles: RoleInfo[];
   // 用户id
   userId: string | number;
@@ -54,7 +54,7 @@ export interface GetUserInfoModel {
 /**
  * @description: Get user information return value
  */
-export interface GetUserProfileModel {
+export interface GetAccessProfileModel {
   user: UserModel;
   authorities: RoleModel[];
 }
@@ -94,7 +94,7 @@ export interface RoleModel {
 /**
  * @description: Get user information return value
  */
-export interface GetUserRolesModel {
+export interface GetAccessRolesModel {
   items: RoleModel[];
   total: number | string;
 }

@@ -9,8 +9,8 @@ import { getAuthCache, setAuthCache } from '/@/utils/auth';
 // import { GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel';
 // import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
 // sys replace core custom
-import { GetUserInfoModel, LoginParams } from '/@/api/core/model/userModel';
-import { doLogout, getUserInfo, loginApi } from '/@/api/core/user';
+import { GetAccessInfoModel as GetUserInfoModel, LoginParams } from '/@/api/core/model/userModel';
+import { doLogout, getAccessInfo as getUserInfo, loginApi } from '/@/api/core/user';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { router } from '/@/router';

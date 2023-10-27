@@ -23,8 +23,8 @@ import { filter } from '/@/utils/helper/treeHelper';
 
 // sys replace core custom
 import {
-  getUserPermCodeList as getPermCode,
-  getUserMenuRouterListTree as getMenuList,
+  getAccessPermCodeList as getPermCode,
+  getAccessMenuRouterListTree as getMenuList,
 } from '/@/api/core/user';
 
 import { useMessage } from '/@/hooks/web/useMessage';

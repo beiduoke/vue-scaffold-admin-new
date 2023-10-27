@@ -16,7 +16,7 @@
               },
               {
                 icon: 'clarity:note-edit-line',
-                label: '菜单管理',
+                label: '权限',
                 onClick: handleEditMenu.bind(null, record),
               },
               {
