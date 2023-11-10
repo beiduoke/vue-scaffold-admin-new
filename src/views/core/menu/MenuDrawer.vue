@@ -149,6 +149,7 @@
           }
           switch (values.type as MenuType) {
             case MenuType.ABILITY:
+              delete values.path;
               if (values.name === '') {
                 values.name = values.title;
               }

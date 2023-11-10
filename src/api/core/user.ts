@@ -2,9 +2,9 @@ import { defHttp } from '/@/utils/http/core';
 import {
   LoginParams,
   LoginResultModel,
-  GetAccessInfoModel,
-  GetAccessProfileModel,
-  GetAccessRolesModel,
+  GetAuthInfoModel,
+  GetAuthProfileModel,
+  GetAuthRolesModel,
   UserParams,
   UserListGetResultModel,
 } from './model/userModel';
@@ -26,18 +26,19 @@ const Api = {
   LoginWithDomain: (domain) => `/auth/login/${domain}`,
   RegisterWithDomain: (domain) => `/auth/register/${domain}`,
   Logout: '/auth/logout',
-  AccessInfo: '/auth/info',
-  AccessProfile: '/auth/profiles',
-  AccessRoles: '/auth/roles',
-  AccessMenuRouterListTrees: '/auth/routers/trees',
-  AccessMenuListTrees: '/auth/menus/trees',
-  AccessPermCodeList: '/auth/permissions',
+  AuthInfo: '/auth/info',
+  AuthProfile: '/auth/profiles',
+  AuthRoles: '/auth/roles',
+  AuthMenuRouterListTrees: '/auth/routers/trees',
+  AuthMenuListTrees: '/auth/menus/trees',
+  AuthPermCodeList: '/auth/permissions',
 };
 
 /**
  * @description: user login api
  */
 export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
+  defHttp.setHeader({ 'X-Domain': params.domain });
   return defHttp.post<LoginResultModel>(
     {
       url: Api.LoginWithDomain(params.domain),
@@ -50,10 +51,10 @@ export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') 
 }
 
 /**
- * @description: getAccessInfo
+ * @description: getAuthInfo
  */
-export function getAccessInfo() {
-  return defHttp.get<GetAccessInfoModel>({ url: Api.AccessInfo }, { errorMessageMode: 'none' });
+export function getAuthInfo() {
+  return defHttp.get<GetAuthInfoModel>({ url: Api.AuthInfo }, { errorMessageMode: 'none' });
 }
 
 export function doLogout() {
@@ -74,20 +75,17 @@ export function testRetry() {
 }
 
 /**
- * @description: getAccessProfile
+ * @description: getAuthProfile
  */
-export function getAccessProfile() {
-  return defHttp.get<GetAccessProfileModel>(
-    { url: Api.AccessProfile },
-    { errorMessageMode: 'none' },
-  );
+export function getAuthProfile() {
+  return defHttp.get<GetAuthProfileModel>({ url: Api.AuthProfile }, { errorMessageMode: 'none' });
 }
 
 /**
- * @description: getAccessRoles
+ * @description: getAuthRoles
  */
-export function getAccessRoles() {
-  return defHttp.get<GetAccessRolesModel>({ url: Api.AccessRoles }, { errorMessageMode: 'none' });
+export function getAuthRoles() {
+  return defHttp.get<GetAuthRolesModel>({ url: Api.AuthRoles }, { errorMessageMode: 'none' });
 }
 
 export interface ListUser {
@@ -138,11 +136,11 @@ export const deleteUser = (id: string) =>
  * 获取用户菜单路由列表-树形
  * @returns promise
  */
-export const getAccessMenuRouterListTree = () => {
+export const getAuthMenuRouterListTree = () => {
   return new Promise<RouteItem[]>((resolve, reject) => {
     defHttp
       .get<BasicFetchResult<RouteItem>>({
-        url: Api.AccessMenuRouterListTrees,
+        url: Api.AuthMenuRouterListTrees,
       })
       .then((data) => {
         resolve(data.items);
@@ -155,10 +153,10 @@ export const getAccessMenuRouterListTree = () => {
  * 获取用户菜单列表-树形
  * @returns promise
  */
-export const getAccessMenuListTree = () => {
+export const getAuthMenuListTree = () => {
   return new Promise<MenuListItem[]>((resolve, reject) => {
     defHttp
-      .get<BasicFetchResult<MenuListItem>>({ url: Api.AccessMenuListTrees })
+      .get<BasicFetchResult<MenuListItem>>({ url: Api.AuthMenuListTrees })
       .then((data) => resolve(data.items))
       .catch((e) => reject(e));
   });
@@ -168,10 +166,10 @@ export const getAccessMenuListTree = () => {
  * 获取用户菜单权限
  * @returns promise
  */
-export function getAccessPermCodeList() {
+export function getAuthPermCodeList() {
   return new Promise<string[]>((resolve, reject) => {
     defHttp
-      .get<BasicFetchResult<string>>({ url: Api.AccessPermCodeList })
+      .get<BasicFetchResult<string>>({ url: Api.AuthPermCodeList })
       .then((data) => resolve(data.items))
       .catch((e) => reject(e));
   });

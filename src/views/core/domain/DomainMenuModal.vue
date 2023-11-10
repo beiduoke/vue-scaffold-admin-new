@@ -33,6 +33,7 @@
   import { getMenuListTree } from '/@/api/core/menu';
   import { getDomainMenuList, handleDomainMenu } from '/@/api/core/domain';
   import { useMessage } from '/@/hooks/web/useMessage';
+
   const { createMessage } = useMessage();
 
   export default defineComponent({
@@ -62,22 +63,22 @@
           const items = await getMenuListTree();
           treeData.value = items as any as TreeItem[];
         }
-        
+
         // 更新分配菜单
         const { items } = await getDomainMenuList(data.record.id);
         setFieldsValue({
           name: data.record.name,
-          menu: items.map((item: { id: any; }) => item.id),
+          menu: items.map((item: { id: any }) => item.id),
         });
       });
 
-      const getTitle = computed(() => ('编辑菜单权限'));
+      const getTitle = computed(() => '编辑菜单权限');
 
       async function handleSubmit() {
         try {
           const values = await validate();
           setModalProps({ confirmLoading: true });
-          // TODO custom api          
+          // TODO custom api
           const handleMenuResult = await handleDomainMenu(rowId.value, {
             menuIds: values.menu,
           });
@@ -93,7 +94,7 @@
         }
       }
 
-      return { registerModal, registerForm, getTitle, handleSubmit, treeData};
+      return { registerModal, registerForm, getTitle, handleSubmit, treeData };
     },
   });
 </script>

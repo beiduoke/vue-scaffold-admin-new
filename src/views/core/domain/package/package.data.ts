@@ -8,7 +8,7 @@ import { State } from '/@/api/core/model/baseModel';
 
 export const columns: BasicColumn[] = [
   {
-    title: '岗位名称',
+    title: '名称',
     dataIndex: 'name',
     width: 200,
   },
@@ -65,7 +65,7 @@ export const columns: BasicColumn[] = [
 export const searchFormSchema: FormSchema[] = [
   {
     field: 'name',
-    label: '套餐名称',
+    label: '名称',
     component: 'Input',
     colProps: { span: 8 },
   },
@@ -86,13 +86,13 @@ export const searchFormSchema: FormSchema[] = [
 export const formSchema: FormSchema[] = [
   {
     field: 'name',
-    label: '套餐名称',
+    label: '名称',
     required: true,
     component: 'Input',
   },
   {
     field: 'sort',
-    label: '套餐排序',
+    label: '排序',
     defaultValue: 100,
     required: true,
     component: 'InputNumber',
@@ -108,6 +108,13 @@ export const formSchema: FormSchema[] = [
         { label: '停用', value: State.INACTIVE },
       ],
     },
+  },
+  {
+    label: ' ',
+    field: 'menuIds',
+    slot: 'menu',
+    defaultValue: [],
+    component: 'Input',
   },
   {
     label: '备注',

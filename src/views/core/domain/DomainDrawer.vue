@@ -21,18 +21,16 @@
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicTree, TreeItem } from '/@/components/Tree';
 
-  import {
-    createDomain,
-    getDomainListTree,
-    updateDomain,
-  } from '/@/api/core/domain';
+  import { createDomain, getDomainListTree, updateDomain } from '/@/api/core/domain';
   import { BasicHandleResult, BasicDataResult } from '/@/api/core/model/baseModel';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { getMenuListTree } from '/@/api/core/menu';
+
   const { createMessage } = useMessage();
 
   export default defineComponent({
     name: 'DomainDrawer',
+    // eslint-disable-next-line vue/no-unused-components
     components: { BasicDrawer, BasicForm, BasicTree, [Card.name]: Card },
     emits: ['success', 'register'],
     setup(_, { emit }) {
@@ -46,7 +44,6 @@
         schemas: formSchema,
         showActionButtonGroup: false,
       });
-
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();

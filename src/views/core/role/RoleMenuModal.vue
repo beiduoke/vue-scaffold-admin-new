@@ -30,10 +30,11 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { BasicTree, TreeItem } from '/@/components/Tree';
   import { menuFormSchema } from './role.data';
-  import { getUserMenuListTree } from '/@/api/core/user';
+  import { getAuthMenuListTree } from '/@/api/core/user';
   import { getRoleMenuList, handleRoleMenu } from '/@/api/core/role';
   import { useMessage } from '/@/hooks/web/useMessage';
-import { MenuListItem } from '/@/api/core/model/menuModel';
+  import { MenuListItem } from '/@/api/core/model/menuModel';
+
   const { createMessage } = useMessage();
 
   export default defineComponent({
@@ -54,30 +55,31 @@ import { MenuListItem } from '/@/api/core/model/menuModel';
         },
       });
 
-      const walkTrees = (routerTrees: MenuListItem[]):MenuListItem[] =>  {
-        let result:MenuListItem[] = []
+      const walkTrees = (routerTrees: MenuListItem[]): MenuListItem[] => {
+        let result: MenuListItem[] = [];
         for (const iterator of routerTrees) {
-          result.push(iterator)
+          result.push(iterator);
           if (iterator.children.length > 0) {
-            result.push(...walkTrees(iterator.children))
-          }
-        }
-        return result
-      }
-
-      const treeWalk = (items: MenuListItem[], pid?: string):MenuListItem[] => {
-        let result: MenuListItem[] = []
-        for (const iterator of items) {
-          if (pid === undefined) {
-            result.push(iterator)
-            continue
-          }
-          if (iterator.parentId == pid) {
-            result.push(...treeWalk(items, iterator.id))
+            result.push(...walkTrees(iterator.children));
           }
         }
         return result;
-      }
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const treeWalk = (items: MenuListItem[], pid?: string): MenuListItem[] => {
+        let result: MenuListItem[] = [];
+        for (const iterator of items) {
+          if (pid === undefined) {
+            result.push(iterator);
+            continue;
+          }
+          if (iterator.parentId == pid) {
+            result.push(...treeWalk(items, iterator.id));
+          }
+        }
+        return result;
+      };
 
       const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
         resetFields();
@@ -85,44 +87,46 @@ import { MenuListItem } from '/@/api/core/model/menuModel';
         rowId.value = data.record.id;
         // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
         if (unref(treeData).length === 0) {
-          const items = await getUserMenuListTree();
+          const items = await getAuthMenuListTree();
           treeData.value = items as any as TreeItem[];
         }
         // 更新分配菜单
         let { items } = await getRoleMenuList(data.record.id);
-        const itemParentIds: string[] = []
+        const itemParentIds: string[] = [];
         // 处理选中菜单子集小于所有最大菜单子集将父级进行删除
         walkTrees(treeData.value as MenuListItem[]).forEach((current) => {
-          const currentChildLen = current.children.length
-          if (currentChildLen> 0) {
-            let itemChildLen :number = 0
-            let itemParentId = ""
+          const currentChildLen = current.children.length;
+          if (currentChildLen > 0) {
+            let itemChildLen: number = 0;
+            let itemParentId = '';
             items.forEach((item) => {
               if (item.parentId == current.id) {
                 if (itemChildLen == 0) {
-                  itemParentId = item.parentId
+                  itemParentId = item.parentId;
                 }
-                itemChildLen++
+                itemChildLen++;
               }
-            })
-            if (currentChildLen > itemChildLen && itemParentId !== "") {
-              itemParentIds.push(itemParentId)
+            });
+            if (currentChildLen > itemChildLen && itemParentId !== '') {
+              itemParentIds.push(itemParentId);
             }
           }
-        })
+        });
         setFieldsValue({
           name: data.record.name,
-          menu: items.filter(element => !itemParentIds.includes(element.id)).map((item: { id: any; }) => item.id),
+          menu: items
+            .filter((element) => !itemParentIds.includes(element.id))
+            .map((item: { id: any }) => item.id),
         });
       });
 
-      const getTitle = computed(() => ('编辑菜单权限'));
+      const getTitle = computed(() => '编辑菜单权限');
 
       async function handleSubmit() {
         try {
           const values = await validate();
           setModalProps({ confirmLoading: true });
-          // TODO custom api          
+          // TODO custom api
           const handleMenuResult = await handleRoleMenu(rowId.value, {
             menuIds: values.menu,
           });
@@ -138,7 +142,7 @@ import { MenuListItem } from '/@/api/core/model/menuModel';
         }
       }
 
-      return { registerModal, registerForm, getTitle, handleSubmit, treeData};
+      return { registerModal, registerForm, getTitle, handleSubmit, treeData };
     },
   });
 </script>

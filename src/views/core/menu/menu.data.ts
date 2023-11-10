@@ -269,7 +269,7 @@ export const formSchema: FormSchema[] = [
     label: '外链设置',
     component: 'RadioButtonGroup',
     defaultValue: MenuLinkType.NO,
-    componentProps: ({ formActionType, formModel }) => {
+    componentProps: ({ formActionType }) => {
       const updateLinkUrl = (disabled = false) =>
         formActionType.updateSchema({ field: 'linkUrl', componentProps: { disabled } });
       return {
@@ -319,7 +319,7 @@ export const formSchema: FormSchema[] = [
       ],
     },
     ifShow: ({ values }) => isMenu(values.type),
-    colProps: { lg: 5, md: 12 },
+    colProps: { lg: 6, md: 12 },
   },
   {
     field: 'isAffix',
@@ -333,7 +333,7 @@ export const formSchema: FormSchema[] = [
       ],
     },
     ifShow: ({ values }) => isMenu(values.type),
-    colProps: { lg: 5, md: 12 },
+    colProps: { lg: 6, md: 12 },
   },
 ];
 

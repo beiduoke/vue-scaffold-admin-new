@@ -18,6 +18,7 @@
                 icon: 'clarity:note-edit-line',
                 label: '权限',
                 onClick: handleEditMenu.bind(null, record),
+                auth: 'system:domain:menu:handle',
               },
               {
                 icon: 'ant-design:delete-outlined',
@@ -42,7 +43,7 @@
   import { defineComponent, nextTick } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { deleteDomain, getDomainListTree } from '/@/api/core/domain';
+  import { deleteDomain, getDomainListByPage } from '/@/api/core/domain';
 
   import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
@@ -63,19 +64,19 @@
       const [registerMenuModal, { openModal: openMenuModal }] = useModal();
       const [registerTable, { reload, expandAll, setLoading }] = useTable({
         title: '租户列表',
-        api: (arg) => getDomainListTree(0, arg),
+        api: (arg) => getDomainListByPage(arg),
         columns,
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema,
         },
-        isTreeTable: true,
-        pagination: false,
+        isTreeTable: false,
+        pagination: true,
         striped: false,
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
-        showIndexColumn: false,
+        showIndexColumn: true,
         canResize: false,
         actionColumn: {
           width: 220,

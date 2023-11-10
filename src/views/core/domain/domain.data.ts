@@ -1,7 +1,6 @@
-import { BasicColumn } from '/@/components/Table';
-import { FormSchema } from '/@/components/Table';
+import { BasicColumn, FormSchema } from '/@/components/Table';
 import { h } from 'vue';
-import { Switch } from 'ant-design-vue';
+import { Switch, Tag } from 'ant-design-vue';
 import { setDomainState } from '/@/api/core/domain';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { formatToDateTime } from '/@/utils/dateUtil';
@@ -12,6 +11,13 @@ export const columns: BasicColumn[] = [
     title: '租户名称',
     dataIndex: 'name',
     width: 400,
+  },
+  {
+    title: '租户套餐',
+    dataIndex: 'package',
+    minWidth: 100,
+    maxWidth: 300,
+    customRender: ({ record }) => h(Tag, { color: 'blue' }, () => record.package.name),
   },
   {
     title: '排序',
@@ -89,6 +95,7 @@ export const formSchema: FormSchema[] = [
     field: 'parentId',
     label: '上级菜单',
     component: 'TreeSelect',
+    show: false,
     defaultValue: 0,
     componentProps: {
       fieldNames: {
@@ -99,6 +106,20 @@ export const formSchema: FormSchema[] = [
       getPopupContainer: () => document.body,
     },
     colProps: { lg: 24, md: 24 },
+  },
+  {
+    field: 'packageId',
+    label: '租户套餐',
+    required: true,
+    component: 'Select',
+    componentProps: {
+      fieldNames: {
+        label: 'name',
+        key: 'id',
+        value: 'id',
+      },
+      getPopupContainer: () => document.body,
+    },
   },
   {
     field: 'name',

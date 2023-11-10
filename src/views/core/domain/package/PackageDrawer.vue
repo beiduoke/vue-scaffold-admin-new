@@ -7,7 +7,22 @@
     width="500px"
     @ok="handleSubmit"
   >
-    <BasicForm @register="registerForm" />
+    <BasicForm @register="registerForm">
+      <template #menu="{ model, field }">
+        <BasicTree
+          v-model:value="model[field]"
+          :treeData="treeData"
+          :fieldNames="{ title: 'title', key: 'id' }"
+          checkable
+          :toolbar="true"
+          autoExpandParent
+          defaultExpandAll
+          clickRowToExpand
+          defaultExpandLevel="10"
+          title="菜单分配"
+        />
+      </template>
+    </BasicForm>
   </BasicDrawer>
 </template>
 <script lang="ts">
@@ -17,19 +32,21 @@
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
   import { createPackage, updatePackage } from '/@/api/core/domain';
-  import { PackageListItem } from '/@/api/core/model/domainModel';
   import { BasicHandleResult, BasicDataResult } from '/@/api/core/model/baseModel';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { getMenuListTree } from '/@/api/core/menu';
+  import { BasicTree, TreeItem } from '/@/components/Tree';
 
   const { createMessage } = useMessage();
 
   export default defineComponent({
     name: 'PackageDrawer',
-    components: { BasicDrawer, BasicForm },
+    components: { BasicDrawer, BasicTree, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
-      const record = ref<PackageListItem>();
+      const treeData = ref<any>([]);
+      const rowId = ref<string>('');
 
       const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
         labelWidth: 90,
@@ -39,29 +56,33 @@
       });
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
-        record.value = undefined;
         resetFields();
+        rowId.value = data.record.id;
+        // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
+        if (unref(treeData).length === 0) {
+          const items = await getMenuListTree();
+          treeData.value = items as any as TreeItem[];
+        }
         setDrawerProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
         if (unref(isUpdate)) {
-          record.value = data.record;
+          rowId.value = data.record.id;
           setFieldsValue({
             ...data.record,
           });
         }
       });
 
-      const getTitle = computed(() => (!unref(isUpdate) ? '新增套餐' : '编辑套餐'));
+      const getTitle = computed(() => (rowId.value ? '新增套餐' : '编辑套餐'));
 
       async function handleSubmit() {
         try {
           const values = await validate();
           setDrawerProps({ confirmLoading: true });
           // TODO custom api
-          const id = (unref(record)?.id as string) ?? '';
           let result: BasicHandleResult<BasicDataResult>;
-          if (id != '') {
-            result = await updatePackage(id, values);
+          if (rowId.value != '') {
+            result = await updatePackage(rowId.value, values);
           } else {
             result = await createPackage(values);
           }
@@ -82,6 +103,7 @@
         registerForm,
         getTitle,
         handleSubmit,
+        treeData,
       };
     },
   });
