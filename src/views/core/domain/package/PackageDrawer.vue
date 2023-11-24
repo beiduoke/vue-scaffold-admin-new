@@ -45,8 +45,8 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
-      const treeData = ref<any>([]);
       const rowId = ref<string>('');
+      const treeData = ref<any>([]);
 
       const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
         labelWidth: 90,
@@ -57,12 +57,7 @@
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();
-        rowId.value = data.record.id;
-        // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
-        if (unref(treeData).length === 0) {
-          const items = await getMenuListTree();
-          treeData.value = items as any as TreeItem[];
-        }
+        rowId.value = '';
         setDrawerProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
         if (unref(isUpdate)) {
@@ -71,9 +66,14 @@
             ...data.record,
           });
         }
+        // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
+        if (unref(treeData).length === 0) {
+          const items = await getMenuListTree();
+          treeData.value = items as any as TreeItem[];
+        }
       });
 
-      const getTitle = computed(() => (rowId.value ? '新增套餐' : '编辑套餐'));
+      const getTitle = computed(() => (!unref(isUpdate) ? '新增套餐' : '编辑套餐'));
 
       async function handleSubmit() {
         try {

@@ -1,9 +1,9 @@
-import { BasicFetchResult, State } from './baseModel';
+import { BasicFetchResult, BasicPageParams, State } from './baseModel';
 
-export type DomainParams = {
+export interface DomainParams extends BasicPageParams {
   name?: string;
   state?: State;
-};
+}
 
 export interface DomainListItem {
   id: string;
@@ -14,26 +14,24 @@ export interface DomainListItem {
   createdAt: string;
   remark: string;
   state: State;
-  children: DomainListItem[];
+  // children: DomainListItem[];
 }
 
 export type DomainListGetResultModel = BasicFetchResult<DomainListItem>;
 
-export type PackageParams = {
+export interface PackageParams extends BasicPageParams {
   name?: string;
   state?: State;
-};
+}
 
 export interface PackageListItem {
   id: string;
   name: string;
-  code: string;
   sort: string;
-  parentId: string;
   createdAt: string;
-  remark: string;
   state: State;
-  children: PackageListItem[];
+  remark: string;
+  menu_ids: string[];
 }
 
 export type PackageListGetResultModel = BasicFetchResult<PackageListItem>;

@@ -20,10 +20,11 @@
   import { getAllPostList } from '/@/api/core/post';
   import { BasicDataResult, BasicHandleResult } from '/@/api/core/model/baseModel';
   import { useMessage } from '/@/hooks/web/useMessage';
-import { RoleListItem } from '/@/api/core/model/roleModel';
-import { PostListItem } from '/@/api/core/model/postModel';
-import { formatToDate } from '/@/utils/dateUtil';
-import { DeptListItem } from '/@/api/core/model/deptModel';
+  import { RoleListItem } from '/@/api/core/model/roleModel';
+  import { PostListItem } from '/@/api/core/model/postModel';
+  import { formatToDate } from '/@/utils/dateUtil';
+  import { DeptListItem } from '/@/api/core/model/deptModel';
+
   const { createMessage } = useMessage();
 
   export default defineComponent({
@@ -73,7 +74,7 @@ import { DeptListItem } from '/@/api/core/model/deptModel';
           {
             field: 'password',
             show: !unref(isUpdate),
-            required: !unref(isUpdate)
+            required: !unref(isUpdate),
           },
           {
             field: 'deptId',
@@ -91,20 +92,20 @@ import { DeptListItem } from '/@/api/core/model/deptModel';
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增账号' : '编辑账号'));
-      
+
       /**
        * 展开部门所有节点
-       * @param depts 
+       * @param depts
        */
-      function expandDeptTree(depts: DeptListItem[] = []) :DeptListItem[] {
+      function expandDeptTree(depts: DeptListItem[] = []): DeptListItem[] {
         const result: DeptListItem[] = [];
         for (const iterator of depts) {
-          if (iterator.children.length > 0){
+          if (iterator.children.length > 0) {
             result.push(...expandDeptTree(iterator.children));
           }
           result.push(iterator);
         }
-        return result
+        return result;
       }
 
       async function handleSubmit() {
@@ -113,25 +114,27 @@ import { DeptListItem } from '/@/api/core/model/deptModel';
           setModalProps({ confirmLoading: true });
           // TODO custom api
           let result: BasicHandleResult<BasicDataResult>;
-          if(values.birthday) {
-            values.birthday = formatToDate(values.birthday)
+          if (values.birthday) {
+            values.birthday = formatToDate(values.birthday);
           }
-          if (values.email == "") {
-            values.email = undefined
+          if (values.email == '') {
+            values.email = undefined;
           }
-          if (values.realName == "") {
-            values.realName = undefined
+          if (values.realName == '') {
+            values.realName = undefined;
           }
           if (rowId.value != '') {
-            values.password = undefined
+            values.password = undefined;
             result = await updateUser(rowId.value, values);
             // 处理数据回传处理
-            const roles = ref<RoleListItem[]>([])
+            const roles = ref<RoleListItem[]>([]);
             for (const iterator of values.roleIds) {
-              roles.value.push(rolesData.value.find(v => v.id == iterator) as RoleListItem)
+              roles.value.push(rolesData.value.find((v) => v.id == iterator) as RoleListItem);
             }
-            values.dept = (expandDeptTree(deptTreeData.value) as DeptListItem[]) .find(v => v.id === values.deptId)
-            values.roles = roles.value
+            values.dept = (expandDeptTree(deptTreeData.value) as DeptListItem[]).find(
+              (v) => v.id === values.deptId,
+            );
+            values.roles = roles.value;
           } else {
             result = await createUser(values);
           }

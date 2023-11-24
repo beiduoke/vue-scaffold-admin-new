@@ -6,7 +6,7 @@
     width="50%"
     @ok="handleSubmit"
   >
-    <BasicForm @register="registerForm" >
+    <BasicForm @register="registerForm">
       <template #deptCustoms="{ model, field }">
         <BasicTree
           v-model:value="model[field]"
@@ -29,15 +29,16 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { dataFormSchema } from './role.data';
-import { BasicTree, TreeItem } from '/@/components/Tree';
-import { getDeptListTree } from '/@/api/core/dept';
-import { getRoleDataScope, handleRoleDataScope } from '/@/api/core/role';
+  import { BasicTree, TreeItem } from '/@/components/Tree';
+  import { getDeptListTree } from '/@/api/core/dept';
+  import { getRoleDataScope, handleRoleDataScope } from '/@/api/core/role';
   import { useMessage } from '/@/hooks/web/useMessage';
+
   const { createMessage } = useMessage();
 
   export default defineComponent({
     name: 'RoleDataModal',
-    components: { BasicModal,BasicTree, BasicForm },
+    components: { BasicModal, BasicTree, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
@@ -59,13 +60,11 @@ import { getRoleDataScope, handleRoleDataScope } from '/@/api/core/role';
         setModalProps({ confirmLoading: false });
         rowId.value = data.record.id;
 
-        
         if (unref(treeData).length === 0) {
           const items = await getDeptListTree();
           treeData.value = items as any as TreeItem[];
         }
 
-        
         // 更新分配数据权限
         const { scope, deptCustoms } = await getRoleDataScope(data.record.id);
         setFieldsValue({
@@ -84,7 +83,7 @@ import { getRoleDataScope, handleRoleDataScope } from '/@/api/core/role';
           // TODO custom api
           const handleDataScopeResult = await handleRoleDataScope(rowId.value, {
             scope: values.scope,
-            deptCustoms: values.deptCustoms || []
+            deptCustoms: values.deptCustoms || [],
           });
           if (handleDataScopeResult.code) {
             createMessage.error(handleDataScopeResult.message);
@@ -98,7 +97,7 @@ import { getRoleDataScope, handleRoleDataScope } from '/@/api/core/role';
         }
       }
 
-      return { registerModal, registerForm, getTitle, handleSubmit,treeData };
+      return { registerModal, registerForm, getTitle, handleSubmit, treeData };
     },
   });
 </script>

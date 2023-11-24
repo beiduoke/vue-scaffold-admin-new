@@ -19,6 +19,7 @@
   import { createRole, updateRole } from '/@/api/core/role';
   import { BasicHandleResult, BasicDataResult } from '/@/api/core/model/baseModel';
   import { useMessage } from '/@/hooks/web/useMessage';
+
   const { createMessage } = useMessage();
 
   export default defineComponent({
@@ -38,6 +39,7 @@
 
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();
+        rowId.value = '';
         setDrawerProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
         if (unref(isUpdate)) {

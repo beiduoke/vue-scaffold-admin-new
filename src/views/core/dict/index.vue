@@ -17,6 +17,11 @@
                 onClick: handleEdit.bind(null, record),
               },
               {
+                icon: 'clarity:note-edit-line',
+                label: '查看数据',
+                onClick: dumpData.bind(null, record),
+              },
+              {
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
                 popConfirm: {

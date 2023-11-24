@@ -1,10 +1,11 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { h } from 'vue';
 import { Switch, Tag } from 'ant-design-vue';
-import { setDomainState } from '/@/api/core/domain';
+import { getPackageListByPage, setDomainState } from '/@/api/core/domain';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { formatToDateTime } from '/@/utils/dateUtil';
 import { State } from '/@/api/core/model/baseModel';
+import { PackageListItem } from '/@/api/core/model/domainModel';
 
 export const columns: BasicColumn[] = [
   {
@@ -95,7 +96,7 @@ export const formSchema: FormSchema[] = [
     field: 'parentId',
     label: '上级菜单',
     component: 'TreeSelect',
-    show: false,
+    show: true,
     defaultValue: 0,
     componentProps: {
       fieldNames: {
@@ -119,6 +120,7 @@ export const formSchema: FormSchema[] = [
         value: 'id',
       },
       getPopupContainer: () => document.body,
+      placeholder: '请选择租户套餐',
     },
   },
   {

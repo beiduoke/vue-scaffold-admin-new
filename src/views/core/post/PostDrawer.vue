@@ -20,6 +20,7 @@
   import { PostListItem } from '/@/api/core/model/postModel';
   import { BasicHandleResult, BasicDataResult } from '/@/api/core/model/baseModel';
   import { useMessage } from '/@/hooks/web/useMessage';
+
   const { createMessage } = useMessage();
 
   export default defineComponent({

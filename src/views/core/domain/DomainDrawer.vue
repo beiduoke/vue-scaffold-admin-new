@@ -19,12 +19,16 @@
   import { formSchema } from './domain.data';
   import { Card } from 'ant-design-vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import { BasicTree, TreeItem } from '/@/components/Tree';
+  import { BasicTree } from '/@/components/Tree';
 
-  import { createDomain, getDomainListTree, updateDomain } from '/@/api/core/domain';
+  import {
+    createDomain,
+    getDomainListTree,
+    getPackageListByPage,
+    updateDomain,
+  } from '/@/api/core/domain';
   import { BasicHandleResult, BasicDataResult } from '/@/api/core/model/baseModel';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { getMenuListTree } from '/@/api/core/menu';
 
   const { createMessage } = useMessage();
 
@@ -35,7 +39,6 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
-      const treeData = ref<any[]>([]);
       const rowId = ref('');
 
       const [registerForm, { resetFields, updateSchema, setFieldsValue, validate }] = useForm({
@@ -48,12 +51,7 @@
       const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
         resetFields();
         setDrawerProps({ confirmLoading: false });
-        // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
-        if (unref(treeData).length === 0) {
-          const menuTree = await getMenuListTree();
-          treeData.value = menuTree as any as TreeItem[];
-        }
-        isUpdate.value = !!data?.isUpdate;
+        isUpdate.value = data.isUpdate;
         if (unref(isUpdate)) {
           // 更新数据
           rowId.value = data.record.id;
@@ -62,11 +60,18 @@
           });
         }
 
-        const items = await getDomainListTree();
-        updateSchema({
-          field: 'parentId',
-          componentProps: { treeData: [{ name: '顶级租户', id: 0 }, ...items] },
-        });
+        const domains = await getDomainListTree();
+        const packages = await getPackageListByPage({ nopaging: true });
+        updateSchema([
+          {
+            field: 'parentId',
+            componentProps: { treeData: [{ name: '顶级租户', id: 0 }, ...domains] },
+          },
+          {
+            field: 'packageId',
+            componentProps: { options: packages.items },
+          },
+        ]);
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增租户' : '编辑租户'));
@@ -99,7 +104,6 @@
         registerForm,
         getTitle,
         handleSubmit,
-        treeData,
       };
     },
   });

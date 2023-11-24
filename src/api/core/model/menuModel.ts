@@ -85,3 +85,14 @@ export interface MenuButtonListItem {
   name: string;
   remarks: string;
 }
+
+export interface MenuCatalogue {
+  name: string;
+}
+
+export interface MenuItem extends MenuListItem {}
+
+export interface MenuAbility {
+  name: string;
+  permission: string;
+}

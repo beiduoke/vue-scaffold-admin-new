@@ -147,6 +147,7 @@
           if (tableButtonsRef.value) {
             values.buttons = unref(tableButtonsRef)?.getDataSource();
           }
+
           switch (values.type as MenuType) {
             case MenuType.ABILITY:
               delete values.path;
